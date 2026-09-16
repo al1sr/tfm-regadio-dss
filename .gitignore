@@ -64,3 +64,5 @@ results/figures/*
 results/reports/*
 !results/figures/.gitkeep
 !results/reports/.gitkeep
+
+TOKEN_SIAR.txt
