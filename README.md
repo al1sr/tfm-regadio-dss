@@ -80,3 +80,5 @@ Para reproducir el entorno de Python se puede usar indistintamente `environment.
 ## Datos sensibles
 
 No se almacenan en este repositorio credenciales, contraseñas ni claves de acceso a las APIs. Las variables de entorno se gestionan mediante un fichero `.env` local que queda excluido por el `.gitignore`.
+
+
