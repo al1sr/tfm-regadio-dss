@@ -1,0 +1,20 @@
+name: tfm-regadio-dss
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pandas
+  - numpy
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - jupyterlab
+  - requests
+  - sqlalchemy
+  - mysql-connector-python
+  - python-dotenv
+  - pip
+  - pip:
+      - xgboost

@@ -1,0 +1,66 @@
+# Entornos y credenciales
+.env
+.env.*
+!config/.env.example
+*.pem
+*.key
+credenciales/
+secrets/
+
+# Datos (no se versionan los datos reales, solo la estructura)
+data/raw/*
+data/interim/*
+data/processed/*
+data/external/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!data/external/.gitkeep
+
+# Modelos entrenados (pueden pesar mucho, se gestionan aparte)
+models/*
+!models/.gitkeep
+*.pkl
+*.joblib
+*.h5
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.Python
+
+# Entornos virtuales
+venv/
+.venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Apache Hop (logs y ficheros temporales de ejecución)
+*.hst
+logs/
+
+# Power BI (ficheros locales de caché de datos)
+*.pbix.bak
+
+# Docker
+*.log
+
+# Sistemas operativos y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Resultados voluminosos generados automáticamente
+results/figures/*
+results/reports/*
+!results/figures/.gitkeep
+!results/reports/.gitkeep
