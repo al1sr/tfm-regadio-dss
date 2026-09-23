@@ -76,6 +76,9 @@ Para reproducir el entorno de Python se puede usar indistintamente `environment.
 2. Crear el entorno virtual con `conda env create -f environment.yml` o con `python -m venv venv` seguido de `pip install -r requirements.txt`.
 3. Copiar `config/.env.example` como `.env` y rellenar las claves de las APIs necesarias (este fichero nunca se sube al repositorio).
 4. Consultar `ORGANIZACION_Y_VERSIONADO.md` para conocer las normas de trabajo en equipo antes de empezar a programar.
+5. Comprobar el acceso a SiAR con `python -m src.data.siar_client`. El comando solo muestra los contadores y límites de uso; nunca imprime el token.
+
+La selección y el tratamiento conjunto de los datos de SiAR y AEMET se documentan en [`docs/ESTRATEGIA_DATOS_DSS.md`](docs/ESTRATEGIA_DATOS_DSS.md).
 
 ## Datos sensibles
 
