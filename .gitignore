@@ -16,6 +16,8 @@ data/external/*
 !data/interim/.gitkeep
 !data/processed/.gitkeep
 !data/external/.gitkeep
+!data/external/siar_necesidades_pimiento_AL01_2025.csv
+!data/external/siar_necesidades_pimiento_AL01_2025.metadata.json
 
 # Modelos entrenados (pueden pesar mucho, se gestionan aparte)
 models/*

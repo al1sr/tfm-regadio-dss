@@ -168,7 +168,7 @@ Además de la Web API documentada, SiAR dispone de la sección pública [Cálcul
 | Tipo de datos | Diario, semanal o mensual. |
 | Fechas | Delimitan el periodo histórico calculado. |
 
-La prueba realizada para la estación `AL02` (Almería), comarca Campo Níjar-Bajo Andarax, mostró 45 cultivos configurados. Para pimiento, SiAR identifica un ciclo de riego de mayo a septiembre.
+La integración final del piloto utiliza la estación `AL01` (La Mojonera), comarca Dalias. Para pimiento, SiAR identifica un ciclo de riego de mayo a septiembre. La consulta del 01/05/2025 al 30/09/2025 devolvió 150 registros, una necesidad neta acumulada de 530,47 mm y un valor medio de `Kc` de 0,68.
 
 ### 7.2 Salidas
 
@@ -220,7 +220,7 @@ Si todavía no existen datos reales de campo, puede construirse un modelo demost
 
 El manual oficial de la Web API v2.2 no documenta un endpoint público específico para las necesidades netas. La web ofrece descargas CSV/PDF y utiliza internamente rutas ligadas a una sesión web y a protección CSRF, entre ellas `necesidadesHidricasRest/calculoJSON` y `exportCSV`. Al no constituir un contrato público de API, automatizar esas rutas sería frágil ante cambios de la página.
 
-La estrategia recomendada es:
+La estrategia adoptada es:
 
 1. Descargar muestras CSV oficiales para documentar y validar el cálculo.
 2. Obtener `ET0` y `Pe` mediante la API oficial de datos diarios.
@@ -233,6 +233,13 @@ necesidad_neta = max(ET0 × Kc − Pe, 0)
 dosis_bruta = necesidad_neta / eficiencia_riego
 recomendacion_final = ajuste(dosis_bruta, humedad_suelo, pronostico, restricciones)
 ```
+
+Los pasos 1, 2 y 4 ya se han validado con el ciclo 2025. Las 150 fechas del CSV
+agronómico coinciden con las 150 observaciones extraídas mediante la API. La
+diferencia máxima entre ambas columnas de ET0 es inferior a 0,005 mm. El proceso
+marca como ausentes, y no como cero, los valores meteorológicos del 21 y 22 de
+julio que la web no proporciona. También registra como huecos de calendario los
+días 18, 19 y 20 de julio, que SiAR no devuelve.
 
 ### 7.6 Pronóstico de necesidades netas
 
@@ -312,4 +319,4 @@ La ingestión de SiAR queda dividida definitivamente en dos conjuntos complement
 1. **API oficial SiAR:** observaciones agroclimáticas, `EtPMon`, `PePMon`, catálogos de estaciones y códigos de validación.
 2. **CSV de necesidades netas por cultivo y área:** fecha, zona, cultivo, `Kc`, `ET0`, `ETc`, `Pe`, `ETc - Pe` y calendario de riego.
 
-Los datos se relacionarán principalmente mediante fecha, estación y zona. Los CSV se conservarán completos en la capa `raw`, incluso cuando repitan `ET0` o `Pe`, para comprobar la trazabilidad y validar que nuestro cálculo reproduce el resultado oficial. En la capa procesada se evitará utilizar simultáneamente como predictores variables que determinen algebraicamente la variable objetivo.
+Los datos se relacionarán principalmente mediante fecha, estación y zona. Los CSV se conservarán completos y sin transformar en `data/external`, acompañados de metadatos, incluso cuando repitan `ET0` o `Pe`. Esto permite comprobar la trazabilidad y validar que nuestro cálculo reproduce el resultado oficial. En la capa procesada se evitará utilizar simultáneamente como predictores variables que determinen algebraicamente la variable objetivo.

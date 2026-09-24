@@ -1,0 +1,16 @@
+{
+  "source": "SiAR - Cálculo de necesidades netas",
+  "source_url": "https://servicio.mapa.gob.es/siarweb/necesidadesHidricas/calculo",
+  "retrieved_at": "2026-09-24",
+  "community": "Andalucía",
+  "province": "Almería",
+  "station_code": "AL01",
+  "station_name": "La Mojonera",
+  "region": "Dalias",
+  "crop": "Pimiento",
+  "crop_cycle": "May / Sep",
+  "frequency": "Diarios",
+  "requested_start_date": "2025-05-01",
+  "requested_end_date": "2025-09-30",
+  "record_count": 150
+}
