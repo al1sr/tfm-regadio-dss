@@ -1,6 +1,6 @@
 # Resumen de trabajo: análisis exploratorio y preparación de variables
 
-Fecha: 28 de septiembre de 2026  
+Fecha: 28 de septiembre de 2026
 Rama de trabajo: `Luismd`
 
 ## 1. Objetivo de la sesión
@@ -132,7 +132,7 @@ python -m src.features.feature_engineering
 python -m unittest discover -s tests
 ```
 
-La última ejecución supera 26 pruebas automatizadas.
+La última ejecución supera 29 pruebas automatizadas.
 
 ## 9. Siguiente trabajo recomendado
 

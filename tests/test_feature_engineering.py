@@ -4,7 +4,10 @@ import unittest
 
 import pandas as pd
 
-from src.features.feature_engineering import build_modeling_dataset
+from src.features.feature_engineering import (
+    build_modeling_dataset,
+    merge_weather_and_crop_needs,
+)
 
 
 class FeatureEngineeringTests(unittest.TestCase):
@@ -100,7 +103,74 @@ class FeatureEngineeringTests(unittest.TestCase):
 
         self.assertEqual(dataset.loc[0, "quality_status"], "WARN")
 
+    def test_lags_respect_calendar_gaps(self):
+        weather = pd.DataFrame(
+            [
+                {
+                    "station_code": "AL01",
+                    "observed_date": "2025-05-01",
+                    "et0_pm_mm": 4.0,
+                },
+                {
+                    "station_code": "AL01",
+                    "observed_date": "2025-05-03",
+                    "et0_pm_mm": 6.0,
+                },
+            ]
+        )
+        crop = pd.DataFrame(
+            [
+                {
+                    "station_code": "AL01",
+                    "crop": "Pimiento",
+                    "observed_date": observed_date,
+                    "crop_coefficient_kc": 0.5,
+                    "net_irrigation_need_mm": 2.0,
+                }
+                for observed_date in ("2025-05-01", "2025-05-03")
+            ]
+        )
+
+        dataset = build_modeling_dataset(weather, crop)
+
+        self.assertTrue(pd.isna(dataset.loc[1, "et0_pm_mm_lag_1d"]))
+
+    def test_allows_multiple_crops_for_the_same_station_and_date(self):
+        weather = pd.DataFrame(
+            [{"station_code": "AL01", "observed_date": "2025-05-01", "et0_pm_mm": 4.0}]
+        )
+        crop = pd.DataFrame(
+            [
+                {
+                    "station_code": "AL01",
+                    "crop": crop_name,
+                    "observed_date": "2025-05-01",
+                    "crop_coefficient_kc": 0.5,
+                    "net_irrigation_need_mm": 2.0,
+                }
+                for crop_name in ("Pimiento", "Tomate")
+            ]
+        )
+
+        merged = merge_weather_and_crop_needs(weather, crop)
+
+        self.assertEqual(len(merged), 2)
+
+    def test_rejects_duplicate_crop_keys(self):
+        weather = pd.DataFrame(
+            [{"station_code": "AL01", "observed_date": "2025-05-01", "et0_pm_mm": 4.0}]
+        )
+        crop_row = {
+            "station_code": "AL01",
+            "crop": "Pimiento",
+            "observed_date": "2025-05-01",
+            "crop_coefficient_kc": 0.5,
+            "net_irrigation_need_mm": 2.0,
+        }
+
+        with self.assertRaisesRegex(ValueError, "duplicadas"):
+            merge_weather_and_crop_needs(weather, pd.DataFrame([crop_row, crop_row]))
+
 
 if __name__ == "__main__":
     unittest.main()
-

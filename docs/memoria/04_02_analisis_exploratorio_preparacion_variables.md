@@ -105,4 +105,3 @@ variables agronómicas, retardos, acumulados, medias móviles y una referencia d
 necesidad neta. Esta estructura mantiene la trazabilidad del apartado 4.1 y
 prepara una base reproducible para comparar modelos simples y avanzados con el
 mismo criterio de evaluación.
-

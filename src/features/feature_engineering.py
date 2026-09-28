@@ -67,12 +67,21 @@ def merge_weather_and_crop_needs(
     weather["observed_date"] = _to_date(weather["observed_date"])
     crop["observed_date"] = _to_date(crop["observed_date"])
 
+    weather_key = ["station_code", "observed_date"]
+    crop_key = ["station_code", "crop", "observed_date"]
+    if weather.duplicated(weather_key).any():
+        raise ValueError("weather_daily contiene claves de estación y fecha duplicadas.")
+    if crop.duplicated(crop_key).any():
+        raise ValueError(
+            "crop_needs_daily contiene claves de estación, cultivo y fecha duplicadas."
+        )
+
     merged = crop.merge(
         weather,
-        on=["station_code", "observed_date"],
+        on=weather_key,
         how="left",
         suffixes=("_crop", "_weather"),
-        validate="one_to_one",
+        validate="many_to_one",
     )
 
     merged["quality_status"] = np.where(
@@ -143,11 +152,16 @@ def add_lagged_features(df: pd.DataFrame) -> pd.DataFrame:
 
     for _, idx in out.groupby(group_cols, sort=False).groups.items():
         subset = out.loc[idx].sort_values("observed_date")
+        dates = pd.DatetimeIndex(pd.to_datetime(subset["observed_date"]))
+        calendar = pd.date_range(dates.min(), dates.max(), freq="D")
         for column in lag_columns:
+            # Reindexar evita tratar como consecutivas observaciones separadas por huecos.
+            daily = pd.Series(subset[column].to_numpy(), index=dates).reindex(calendar)
             for lag in (1, 3, 7):
-                out.loc[subset.index, f"{column}_lag_{lag}d"] = subset[column].shift(lag)
+                lagged = daily.shift(lag).reindex(dates).to_numpy()
+                out.loc[subset.index, f"{column}_lag_{lag}d"] = lagged
             for window in (3, 7, 14):
-                shifted = subset[column].shift(1)
+                shifted = daily.shift(1)
                 if column in {
                     "precipitation_mm",
                     "effective_precipitation_pm_mm",
@@ -158,7 +172,9 @@ def add_lagged_features(df: pd.DataFrame) -> pd.DataFrame:
                 else:
                     rolled = shifted.rolling(window, min_periods=1).mean()
                     suffix = "mean"
-                out.loc[subset.index, f"{column}_{suffix}_{window}d"] = rolled
+                out.loc[subset.index, f"{column}_{suffix}_{window}d"] = (
+                    rolled.reindex(dates).to_numpy()
+                )
 
     return out
 
@@ -200,4 +216,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
