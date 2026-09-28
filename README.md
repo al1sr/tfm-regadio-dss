@@ -86,6 +86,7 @@ Para reproducir el entorno de Python se puede usar indistintamente `environment.
 La selección y el tratamiento conjunto de los datos de SiAR y AEMET se documentan en [`docs/ESTRATEGIA_DATOS_DSS.md`](docs/ESTRATEGIA_DATOS_DSS.md).
 Los resultados y las incidencias de la primera carga real se recogen en [`docs/PRIMERA_EXTRACCION_PILOTO.md`](docs/PRIMERA_EXTRACCION_PILOTO.md).
 El texto desarrollado del apartado 4.1 y su ejemplo visual están en [`docs/memoria/04_01_extraccion_transformacion_almacenamiento.md`](docs/memoria/04_01_extraccion_transformacion_almacenamiento.md).
+El texto desarrollado del apartado 4.2 y el código de preparación de variables están en [`docs/memoria/04_02_analisis_exploratorio_preparacion_variables.md`](docs/memoria/04_02_analisis_exploratorio_preparacion_variables.md) y `src/features/feature_engineering.py`.
 
 ## Datos sensibles
 
