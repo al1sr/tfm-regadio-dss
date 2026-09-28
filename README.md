@@ -88,6 +88,7 @@ Los resultados y las incidencias de la primera carga real se recogen en [`docs/P
 El texto desarrollado del apartado 4.1 y su ejemplo visual están en [`docs/memoria/04_01_extraccion_transformacion_almacenamiento.md`](docs/memoria/04_01_extraccion_transformacion_almacenamiento.md).
 El texto desarrollado del apartado 4.2 y el código de preparación de variables están en [`docs/memoria/04_02_analisis_exploratorio_preparacion_variables.md`](docs/memoria/04_02_analisis_exploratorio_preparacion_variables.md) y `src/features/feature_engineering.py`.
 El resumen de la sesión del apartado 4.2 está en [`docs/RESUMEN_SESION_2026-09-28_LUISM.md`](docs/RESUMEN_SESION_2026-09-28_LUISM.md).
+El desarrollo, los resultados y el resumen del apartado 4.3 están en [`docs/memoria/04_03_desarrollo_evaluacion_modelo_predictivo.md`](docs/memoria/04_03_desarrollo_evaluacion_modelo_predictivo.md), [`docs/data_samples/model_evaluation_4_3.json`](docs/data_samples/model_evaluation_4_3.json) y [`docs/RESUMEN_SESION_2026-09-28_LUISM_4_3.md`](docs/RESUMEN_SESION_2026-09-28_LUISM_4_3.md).
 
 ## Datos sensibles
 

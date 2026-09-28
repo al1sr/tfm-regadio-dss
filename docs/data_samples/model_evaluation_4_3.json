@@ -1,0 +1,79 @@
+{
+  "objective": "Anticipar la referencia diaria de necesidad neta de SiAR",
+  "target": "target_net_irrigation_need_mm",
+  "data_start": "2025-05-01",
+  "data_end": "2025-09-30",
+  "random_seed": 42,
+  "selected_model": "ridge",
+  "selection_metric": "validation.mae_mm_day",
+  "features": [
+    "crop_coefficient_kc",
+    "day_of_year_sin",
+    "day_of_year_cos",
+    "target_lag_1d",
+    "target_lag_3d",
+    "target_lag_7d",
+    "target_mean_3d",
+    "target_mean_7d",
+    "target_mean_14d"
+  ],
+  "excluded_same_day_features": [
+    "et0_mm",
+    "crop_evapotranspiration_etc_mm",
+    "effective_precipitation_mm"
+  ],
+  "split": {
+    "train_rows": 103,
+    "validation_rows": 22,
+    "test_rows": 23,
+    "train_end": "2025-08-16",
+    "validation_end": "2025-09-07",
+    "test_start": "2025-09-08",
+    "test_end": "2025-09-30"
+  },
+  "validation": {
+    "persistence": {
+      "mae_mm_day": 0.44136363636363635,
+      "rmse_mm_day": 0.8453858720887595,
+      "bias_mm_day": 0.19136363636363637,
+      "weekly_mae_mm": 1.1974999999999987
+    },
+    "ridge": {
+      "mae_mm_day": 0.3804971065914776,
+      "rmse_mm_day": 0.4645777887169087,
+      "bias_mm_day": 0.0572797156120127,
+      "weekly_mae_mm": 1.3695506640238877
+    },
+    "random_forest": {
+      "mae_mm_day": 1.4530945755660991,
+      "rmse_mm_day": 1.9349878811377488,
+      "bias_mm_day": 1.4127825249855077,
+      "weekly_mae_mm": 7.770303887420291
+    }
+  },
+  "test": {
+    "persistence": {
+      "mae_mm_day": 0.11956521739130432,
+      "rmse_mm_day": 0.15607968979088016,
+      "bias_mm_day": -0.00043478260869565257,
+      "weekly_mae_mm": 0.1724999999999997
+    },
+    "ridge": {
+      "mae_mm_day": 0.6198329092963856,
+      "rmse_mm_day": 0.6788627339454771,
+      "bias_mm_day": -0.6055184720897308,
+      "weekly_mae_mm": 3.4817312145159525
+    },
+    "random_forest": {
+      "mae_mm_day": 0.48596073375698484,
+      "rmse_mm_day": 0.5048288030403639,
+      "bias_mm_day": 0.48596073375698484,
+      "weekly_mae_mm": 2.7942742191026633
+    }
+  },
+  "limitations": [
+    "Un solo ciclo, cultivo y estacion no permiten demostrar generalizacion.",
+    "La etiqueta es una referencia calculada por SiAR, no riego real observado.",
+    "No se puede afirmar ahorro de agua sin sensores, riego aplicado y respuesta del cultivo."
+  ]
+}
