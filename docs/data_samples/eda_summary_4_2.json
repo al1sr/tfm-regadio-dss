@@ -1,0 +1,61 @@
+{
+  "scope": {
+    "station_codes": [
+      "AL01"
+    ],
+    "crops": [
+      "Pimiento"
+    ],
+    "start_date": "2025-05-01",
+    "end_date": "2025-09-30",
+    "expected_calendar_days": 153,
+    "observed_unique_days": 150,
+    "missing_calendar_days": 3,
+    "missing_dates": [
+      "2025-07-18",
+      "2025-07-19",
+      "2025-07-20"
+    ]
+  },
+  "dataset": {
+    "rows": 150,
+    "columns": 88,
+    "duplicate_keys": 0,
+    "complete_target_rows": 148,
+    "target_missing_rows": 2,
+    "quality_status_counts": {
+      "PASS": 148,
+      "WARN": 2
+    },
+    "columns_with_missing_values": 67
+  },
+  "target": {
+    "unit": "mm/dia",
+    "mean": 3.5882,
+    "median": 3.94,
+    "minimum": 0.0,
+    "maximum": 7.07,
+    "standard_deviation": 1.6712,
+    "total": 531.05,
+    "zero_days": 1
+  },
+  "agronomic_checks": {
+    "humidity_outside_0_100": 0,
+    "negative_et0": 0,
+    "negative_precipitation": 0,
+    "negative_target": 0,
+    "temperature_order_violations": 0
+  },
+  "pearson_correlations_with_target": {
+    "crop_coefficient_kc": 0.9259,
+    "et0_pm_mm": 0.7484,
+    "temperature_mean_c": 0.6419,
+    "solar_radiation_raw": 0.5184,
+    "precipitation_mm": -0.2207,
+    "humidity_mean_pct": -0.2788
+  },
+  "aemet_alignment": {
+    "status": "not_joined_for_training",
+    "reason": "La muestra AEMET disponible corresponde a una prediccion emitida en 2026, mientras que el piloto SiAR corresponde a 2025. Se conserva como prueba de integracion operativa, no como predictor historico del entrenamiento."
+  }
+}

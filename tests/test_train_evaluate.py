@@ -6,9 +6,11 @@ import numpy as np
 import pandas as pd
 
 from src.models.train_evaluate import (
+    EXCLUDED_SAME_DAY_FEATURES,
     FEATURE_COLUMNS,
     TARGET,
     prepare_modeling_data,
+    temporal_holdout,
     temporal_split,
     train_and_evaluate,
 )
@@ -35,9 +37,25 @@ class TrainEvaluateTests(unittest.TestCase):
 
         prepared = prepare_modeling_data(source)
 
-        self.assertTrue(pd.isna(prepared.loc[1, "target_lag_1d"]))
-        self.assertEqual(prepared.loc[2, "target_lag_3d"], source.loc[0, TARGET])
+        self.assertTrue(
+            pd.isna(prepared.loc[1, "net_irrigation_need_mm_lag_1d"])
+        )
+        self.assertEqual(
+            prepared.loc[2, "net_irrigation_need_mm_lag_3d"], source.loc[0, TARGET]
+        )
         self.assertTrue(set(FEATURE_COLUMNS).issubset(prepared.columns))
+
+    def test_reuses_features_prepared_in_section_4_2(self):
+        source = sample_data(40)
+        source["net_irrigation_need_mm_lag_1d"] = 99.0
+        for lag in (3, 7):
+            source[f"net_irrigation_need_mm_lag_{lag}d"] = 1.0
+        for window in (3, 7, 14):
+            source[f"net_irrigation_need_mm_sum_{window}d"] = 2.0
+
+        prepared = prepare_modeling_data(source)
+
+        self.assertTrue((prepared["net_irrigation_need_mm_lag_1d"] == 99.0).all())
 
     def test_temporal_split_preserves_order(self):
         split = temporal_split(prepare_modeling_data(sample_data()))
@@ -50,11 +68,23 @@ class TrainEvaluateTests(unittest.TestCase):
         )
         self.assertEqual(len(split.train) + len(split.validation) + len(split.test), 80)
 
+    def test_final_holdout_preserves_order(self):
+        split = temporal_holdout(prepare_modeling_data(sample_data()))
+
+        self.assertLess(
+            split.development["observed_date"].max(), split.test["observed_date"].min()
+        )
+        self.assertEqual(len(split.development) + len(split.test), 80)
+
     def test_training_is_reproducible_and_excludes_same_day_formula(self):
         report_a, predictions_a, _ = train_and_evaluate(sample_data())
         report_b, predictions_b, _ = train_and_evaluate(sample_data())
 
-        self.assertIn(report_a["selected_model"], {"ridge", "random_forest"})
+        self.assertIn(
+            report_a["selected_model"], {"persistence", "ridge", "random_forest"}
+        )
+        self.assertEqual(report_a["input_stage"], "processed_4_2")
+        self.assertEqual(len(report_a["cross_validation"]["folds"]), 3)
         for model_name in report_a["test"]:
             for metric_name in report_a["test"][model_name]:
                 self.assertAlmostEqual(
@@ -63,7 +93,13 @@ class TrainEvaluateTests(unittest.TestCase):
                 )
         self.assertEqual(len(predictions_a), report_a["split"]["test_rows"])
         pd.testing.assert_frame_equal(predictions_a, predictions_b)
-        self.assertNotIn("et0_mm", report_a["features"])
+        self.assertTrue(set(EXCLUDED_SAME_DAY_FEATURES).isdisjoint(report_a["features"]))
+        prediction_columns = [
+            column
+            for column in predictions_a
+            if column.startswith("prediction_")
+        ]
+        self.assertTrue((predictions_a[prediction_columns] >= 0).all().all())
 
     def test_rejects_small_datasets(self):
         with self.assertRaisesRegex(ValueError, "30 observaciones"):

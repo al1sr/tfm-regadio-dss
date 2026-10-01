@@ -6,7 +6,7 @@ diseñado un proceso reproducible de extracción, transformación y almacenamien
 que mantiene separadas las respuestas originales de las tablas preparadas para
 el análisis. Esta separación permite auditar cada recomendación, repetir el
 procesamiento cuando cambien las reglas y evitar que una corrección destruya el
-dato recibido de la fuente.
+contenido recibido de la fuente.
 
 El piloto utiliza como referencia el pimiento bajo invernadero en Almería. Se ha
 extraído un ciclo completo del 1 de mayo al 30 de septiembre de 2025 para la

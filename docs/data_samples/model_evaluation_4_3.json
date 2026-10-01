@@ -1,55 +1,215 @@
 {
   "objective": "Anticipar la referencia diaria de necesidad neta de SiAR",
+  "input_stage": "processed_4_2",
   "target": "target_net_irrigation_need_mm",
   "data_start": "2025-05-01",
   "data_end": "2025-09-30",
+  "valid_rows": 148,
   "random_seed": 42,
-  "selected_model": "ridge",
-  "selection_metric": "validation.mae_mm_day",
+  "selection_method": "3-fold expanding-window temporal validation",
+  "selection_metric": "cross_validation.mae_mm_day.mean",
+  "selected_model": "persistence",
+  "selected_ml_candidate": "ridge",
+  "test_best_model": "persistence",
   "features": [
     "crop_coefficient_kc",
     "day_of_year_sin",
     "day_of_year_cos",
-    "target_lag_1d",
-    "target_lag_3d",
-    "target_lag_7d",
-    "target_mean_3d",
-    "target_mean_7d",
-    "target_mean_14d"
+    "net_irrigation_need_mm_lag_1d",
+    "net_irrigation_need_mm_lag_3d",
+    "net_irrigation_need_mm_lag_7d",
+    "net_irrigation_need_mm_sum_3d",
+    "net_irrigation_need_mm_sum_7d",
+    "net_irrigation_need_mm_sum_14d"
   ],
   "excluded_same_day_features": [
     "et0_mm",
+    "et0_pm_mm",
     "crop_evapotranspiration_etc_mm",
-    "effective_precipitation_mm"
+    "effective_precipitation_mm",
+    "effective_precipitation_pm_mm",
+    "etc_estimated_from_weather_mm",
+    "net_irrigation_need_estimated_mm"
   ],
+  "prediction_constraint": "Predicciones recortadas a un mínimo de 0 mm/día",
   "split": {
-    "train_rows": 103,
-    "validation_rows": 22,
+    "development_rows": 125,
     "test_rows": 23,
-    "train_end": "2025-08-16",
-    "validation_end": "2025-09-07",
+    "development_start": "2025-05-01",
+    "development_end": "2025-09-07",
     "test_start": "2025-09-08",
     "test_end": "2025-09-30"
   },
-  "validation": {
-    "persistence": {
-      "mae_mm_day": 0.44136363636363635,
-      "rmse_mm_day": 0.8453858720887595,
-      "bias_mm_day": 0.19136363636363637,
-      "weekly_mae_mm": 1.1974999999999987
+  "cross_validation": {
+    "summary": {
+      "persistence": {
+        "mae_mm_day": {
+          "mean": 0.43419354838709684,
+          "std": 0.07469442895996475,
+          "min": 0.35838709677419367,
+          "max": 0.5358064516129033
+        },
+        "rmse_mm_day": {
+          "mean": 0.6442324182173594,
+          "std": 0.12675889366930027,
+          "min": 0.4653510641475163,
+          "max": 0.7438131919481725
+        },
+        "bias_mm_day": {
+          "mean": 0.013333333333333327,
+          "std": 0.08372954716149562,
+          "min": -0.05064516129032262,
+          "max": 0.13161290322580646
+        },
+        "weekly_mae_mm": {
+          "mean": 0.9258888888888878,
+          "std": 0.1568991970173563,
+          "min": 0.7516666666666657,
+          "max": 1.131999999999998
+        }
+      },
+      "ridge": {
+        "mae_mm_day": {
+          "mean": 0.6024839920658636,
+          "std": 0.3031206032322969,
+          "min": 0.35614551954260953,
+          "max": 1.0294807581401293
+        },
+        "rmse_mm_day": {
+          "mean": 0.7415277368544663,
+          "std": 0.37064425285667935,
+          "min": 0.45543694186029954,
+          "max": 1.2649410957103282
+        },
+        "bias_mm_day": {
+          "mean": 0.292373021727319,
+          "std": 0.42246371622993895,
+          "min": -0.14633195951597142,
+          "max": 0.8629616748813247
+        },
+        "weekly_mae_mm": {
+          "mean": 2.8031621130492628,
+          "std": 1.622652876504558,
+          "min": 1.3855109365408187,
+          "max": 5.074742446217396
+        }
+      },
+      "random_forest": {
+        "mae_mm_day": {
+          "mean": 1.1178086833792296,
+          "std": 0.09044596910015759,
+          "min": 1.0424612541071272,
+          "max": 1.24499655145631
+        },
+        "rmse_mm_day": {
+          "mean": 1.3846300198592447,
+          "std": 0.179023077901907,
+          "min": 1.1658425293238188,
+          "max": 1.604354717815297
+        },
+        "bias_mm_day": {
+          "mean": -0.4315610497240166,
+          "std": 0.9977550839279504,
+          "min": -1.24499655145631,
+          "max": 0.9736629978910568
+        },
+        "weekly_mae_mm": {
+          "mean": 6.396470979981583,
+          "std": 1.0041228446143629,
+          "min": 5.287306243968451,
+          "max": 7.71897861902912
+        }
+      }
     },
-    "ridge": {
-      "mae_mm_day": 0.3804971065914776,
-      "rmse_mm_day": 0.4645777887169087,
-      "bias_mm_day": 0.0572797156120127,
-      "weekly_mae_mm": 1.3695506640238877
-    },
-    "random_forest": {
-      "mae_mm_day": 1.4530945755660991,
-      "rmse_mm_day": 1.9349878811377488,
-      "bias_mm_day": 1.4127825249855077,
-      "weekly_mae_mm": 7.770303887420291
-    }
+    "folds": [
+      {
+        "fold": 1,
+        "train_rows": 32,
+        "validation_rows": 31,
+        "train_start": "2025-05-01",
+        "train_end": "2025-06-01",
+        "validation_start": "2025-06-02",
+        "validation_end": "2025-07-02",
+        "metrics": {
+          "persistence": {
+            "mae_mm_day": 0.35838709677419367,
+            "rmse_mm_day": 0.4653510641475163,
+            "bias_mm_day": -0.04096774193548386,
+            "weekly_mae_mm": 0.8939999999999998
+          },
+          "ridge": {
+            "mae_mm_day": 0.4218256985148519,
+            "rmse_mm_day": 0.5042051729927707,
+            "bias_mm_day": 0.16048934981660373,
+            "weekly_mae_mm": 1.9492329563895745
+          },
+          "random_forest": {
+            "mae_mm_day": 1.24499655145631,
+            "rmse_mm_day": 1.383692812438619,
+            "bias_mm_day": -1.24499655145631,
+            "weekly_mae_mm": 7.71897861902912
+          }
+        }
+      },
+      {
+        "fold": 2,
+        "train_rows": 63,
+        "validation_rows": 31,
+        "train_start": "2025-05-01",
+        "train_end": "2025-07-02",
+        "validation_start": "2025-07-03",
+        "validation_end": "2025-08-07",
+        "metrics": {
+          "persistence": {
+            "mae_mm_day": 0.5358064516129033,
+            "rmse_mm_day": 0.7235329985563893,
+            "bias_mm_day": -0.05064516129032262,
+            "weekly_mae_mm": 0.7516666666666657
+          },
+          "ridge": {
+            "mae_mm_day": 1.0294807581401293,
+            "rmse_mm_day": 1.2649410957103282,
+            "bias_mm_day": 0.8629616748813247,
+            "weekly_mae_mm": 5.074742446217396
+          },
+          "random_forest": {
+            "mae_mm_day": 1.0424612541071272,
+            "rmse_mm_day": 1.1658425293238188,
+            "bias_mm_day": -1.023349595606797,
+            "weekly_mae_mm": 5.287306243968451
+          }
+        }
+      },
+      {
+        "fold": 3,
+        "train_rows": 94,
+        "validation_rows": 31,
+        "train_start": "2025-05-01",
+        "train_end": "2025-08-07",
+        "validation_start": "2025-08-08",
+        "validation_end": "2025-09-07",
+        "metrics": {
+          "persistence": {
+            "mae_mm_day": 0.4083870967741935,
+            "rmse_mm_day": 0.7438131919481725,
+            "bias_mm_day": 0.13161290322580646,
+            "weekly_mae_mm": 1.131999999999998
+          },
+          "ridge": {
+            "mae_mm_day": 0.35614551954260953,
+            "rmse_mm_day": 0.45543694186029954,
+            "bias_mm_day": -0.14633195951597142,
+            "weekly_mae_mm": 1.3855109365408187
+          },
+          "random_forest": {
+            "mae_mm_day": 1.065968244574251,
+            "rmse_mm_day": 1.604354717815297,
+            "bias_mm_day": 0.9736629978910568,
+            "weekly_mae_mm": 6.1831280769471775
+          }
+        }
+      }
+    ]
   },
   "test": {
     "persistence": {
@@ -59,21 +219,23 @@
       "weekly_mae_mm": 0.1724999999999997
     },
     "ridge": {
-      "mae_mm_day": 0.6198329092963856,
-      "rmse_mm_day": 0.6788627339454771,
-      "bias_mm_day": -0.6055184720897308,
-      "weekly_mae_mm": 3.4817312145159525
+      "mae_mm_day": 0.3135084638630511,
+      "rmse_mm_day": 0.3524672458105386,
+      "bias_mm_day": -0.3102629871363346,
+      "weekly_mae_mm": 1.7840121760339243
     },
     "random_forest": {
-      "mae_mm_day": 0.48596073375698484,
-      "rmse_mm_day": 0.5048288030403639,
-      "bias_mm_day": 0.48596073375698484,
-      "weekly_mae_mm": 2.7942742191026633
+      "mae_mm_day": 0.5620453098210163,
+      "rmse_mm_day": 0.5829772329512651,
+      "bias_mm_day": 0.5620453098210163,
+      "weekly_mae_mm": 3.231760531470843
     }
   },
+  "decision": "Mantener la persistencia como referencia técnica y no desplegar por ahora Ridge ni Random Forest: ninguno mejora de forma estable el baseline temporal.",
   "limitations": [
-    "Un solo ciclo, cultivo y estacion no permiten demostrar generalizacion.",
+    "Un solo ciclo, cultivo y estación no permiten demostrar generalización.",
     "La etiqueta es una referencia calculada por SiAR, no riego real observado.",
-    "No se puede afirmar ahorro de agua sin sensores, riego aplicado y respuesta del cultivo."
+    "No se puede afirmar ahorro de agua sin sensores, riego aplicado y respuesta del cultivo.",
+    "La meteorología AEMET disponible no coincide temporalmente con el ciclo de entrenamiento."
   ]
 }

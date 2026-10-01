@@ -1,0 +1,89 @@
+﻿variable,dtype,role,availability_at_prediction,leakage_risk,modeling_recommendation,missing_count,missing_pct
+source_crop,str,trazabilidad_calidad,conocida,False,control; no predictor,0,0.0
+station_code,str,identificador,conocida,False,clave o segmentacion; no se escala,0,0.0
+station_name,str,identificador,conocida,False,clave o segmentacion; no se escala,0,0.0
+region,str,identificador,conocida,False,clave o segmentacion; no se escala,0,0.0
+crop,str,identificador,conocida,False,clave o segmentacion; no se escala,0,0.0
+observed_date,str,identificador,conocida,False,clave o segmentacion; no se escala,0,0.0
+crop_coefficient_kc,float64,predictora_planificada,conocida de antemano,False,candidata,0,0.0
+et0_mm,float64,predictora_condicionada,observada; requiere equivalente pronosticado,False,no usar como valor futuro real en produccion,2,1.33
+crop_evapotranspiration_etc_mm,float64,diagnostico,contemporanea al objetivo,True,excluir del entrenamiento predictivo por fuga directa,2,1.33
+effective_precipitation_mm,float64,diagnostico,contemporanea al objetivo,True,excluir del entrenamiento predictivo por fuga directa,2,1.33
+target_net_irrigation_need_mm,float64,objetivo,solo tras observar/calcular el dia,False,variable a predecir,2,1.33
+quality_status_crop,str,trazabilidad_calidad,conocida,False,control; no predictor,0,0.0
+quality_issues_crop,str,trazabilidad_calidad,conocida,False,control; no predictor,148,98.67
+ingested_at_crop,str,trazabilidad_calidad,conocida,False,control; no predictor,0,0.0
+source_file_crop,str,trazabilidad_calidad,conocida,False,control; no predictor,0,0.0
+source_weather,str,trazabilidad_calidad,conocida,False,control; no predictor,0,0.0
+temperature_mean_c,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+temperature_max_c,float64,predictora_meteorologica,observada; requiere pronostico para horizonte futuro,False,candidata para nowcast o con equivalente AEMET,1,0.67
+temperature_min_c,float64,predictora_meteorologica,observada; requiere pronostico para horizonte futuro,False,candidata para nowcast o con equivalente AEMET,1,0.67
+humidity_mean_pct,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+humidity_max_pct,float64,predictora_meteorologica,observada; requiere pronostico para horizonte futuro,False,candidata para nowcast o con equivalente AEMET,1,0.67
+humidity_min_pct,float64,predictora_meteorologica,observada; requiere pronostico para horizonte futuro,False,candidata para nowcast o con equivalente AEMET,1,0.67
+wind_speed_mean_ms,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+wind_direction_raw,float64,predictora_meteorologica,observada; requiere pronostico para horizonte futuro,False,candidata para nowcast o con equivalente AEMET,1,0.67
+wind_speed_max_ms,float64,predictora_meteorologica,observada; requiere pronostico para horizonte futuro,False,candidata para nowcast o con equivalente AEMET,1,0.67
+solar_radiation_raw,float64,predictora_meteorologica,observada; requiere pronostico para horizonte futuro,False,candidata para nowcast o con equivalente AEMET,1,0.67
+precipitation_mm,float64,predictora_meteorologica,observada; requiere pronostico para horizonte futuro,False,candidata para nowcast o con equivalente AEMET,1,0.67
+soil_temperature_1_c,float64,predictora_meteorologica,observada; requiere pronostico para horizonte futuro,False,candidata para nowcast o con equivalente AEMET,1,0.67
+soil_temperature_2_c,float64,predictora_meteorologica,observada; requiere pronostico para horizonte futuro,False,candidata para nowcast o con equivalente AEMET,1,0.67
+et0_pm_mm,float64,predictora_meteorologica,observada; requiere pronostico para horizonte futuro,False,candidata para nowcast o con equivalente AEMET,2,1.33
+effective_precipitation_pm_mm,float64,predictora_condicionada,observada; requiere equivalente pronosticado,False,no usar como valor futuro real en produccion,2,1.33
+quality_status_weather,str,trazabilidad_calidad,conocida,False,control; no predictor,0,0.0
+quality_issues_weather,str,trazabilidad_calidad,conocida,False,control; no predictor,148,98.67
+ingested_at_weather,str,trazabilidad_calidad,conocida,False,control; no predictor,0,0.0
+source_file_weather,str,trazabilidad_calidad,conocida,False,control; no predictor,0,0.0
+quality_status,str,trazabilidad_calidad,conocida,False,control; no predictor,0,0.0
+year,int32,predictora_planificada,conocida de antemano,False,candidata,0,0.0
+month,int32,predictora_planificada,conocida de antemano,False,candidata,0,0.0
+week_of_year,int64,predictora_planificada,conocida de antemano,False,candidata,0,0.0
+day_of_year,int32,predictora_planificada,conocida de antemano,False,candidata,0,0.0
+day_of_year_sin,float64,predictora_planificada,conocida de antemano,False,candidata,0,0.0
+day_of_year_cos,float64,predictora_planificada,conocida de antemano,False,candidata,0,0.0
+temperature_range_c,float64,predictora_meteorologica,observada; requiere pronostico para horizonte futuro,False,candidata para nowcast o con equivalente AEMET,1,0.67
+vapor_pressure_deficit_kpa,float64,predictora_meteorologica,observada; requiere pronostico para horizonte futuro,False,candidata para nowcast o con equivalente AEMET,1,0.67
+etc_estimated_from_weather_mm,float64,diagnostico,contemporanea al objetivo,True,excluir del entrenamiento predictivo por fuga directa,2,1.33
+net_irrigation_need_estimated_mm,float64,diagnostico,contemporanea al objetivo,True,excluir del entrenamiento predictivo por fuga directa,2,1.33
+et0_pm_mm_lag_1d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),4,2.67
+et0_pm_mm_lag_3d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),8,5.33
+et0_pm_mm_lag_7d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),12,8.0
+et0_pm_mm_mean_3d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),4,2.67
+et0_pm_mm_mean_7d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+et0_pm_mm_mean_14d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+effective_precipitation_pm_mm_lag_1d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),4,2.67
+effective_precipitation_pm_mm_lag_3d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),8,5.33
+effective_precipitation_pm_mm_lag_7d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),12,8.0
+effective_precipitation_pm_mm_sum_3d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),4,2.67
+effective_precipitation_pm_mm_sum_7d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+effective_precipitation_pm_mm_sum_14d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+precipitation_mm_lag_1d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),3,2.0
+precipitation_mm_lag_3d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),7,4.67
+precipitation_mm_lag_7d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),11,7.33
+precipitation_mm_sum_3d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),3,2.0
+precipitation_mm_sum_7d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+precipitation_mm_sum_14d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+temperature_mean_c_lag_1d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),3,2.0
+temperature_mean_c_lag_3d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),7,4.67
+temperature_mean_c_lag_7d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),11,7.33
+temperature_mean_c_mean_3d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),3,2.0
+temperature_mean_c_mean_7d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+temperature_mean_c_mean_14d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+humidity_mean_pct_lag_1d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),3,2.0
+humidity_mean_pct_lag_3d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),7,4.67
+humidity_mean_pct_lag_7d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),11,7.33
+humidity_mean_pct_mean_3d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),3,2.0
+humidity_mean_pct_mean_7d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+humidity_mean_pct_mean_14d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+solar_radiation_raw_lag_1d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),3,2.0
+solar_radiation_raw_lag_3d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),7,4.67
+solar_radiation_raw_lag_7d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),11,7.33
+solar_radiation_raw_mean_3d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),3,2.0
+solar_radiation_raw_mean_7d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+solar_radiation_raw_mean_14d,float64,predictora_historica,disponible antes de la prediccion,False,retardo o ventana calculada con shift(1),1,0.67
+net_irrigation_need_mm_lag_1d,float64,predictora_historica,disponible antes de la prediccion,False,usar solo con desplazamiento temporal,4,2.67
+net_irrigation_need_mm_lag_3d,float64,predictora_historica,disponible antes de la prediccion,False,usar solo con desplazamiento temporal,8,5.33
+net_irrigation_need_mm_lag_7d,float64,predictora_historica,disponible antes de la prediccion,False,usar solo con desplazamiento temporal,12,8.0
+net_irrigation_need_mm_sum_3d,float64,predictora_historica,disponible antes de la prediccion,False,usar solo con desplazamiento temporal,4,2.67
+net_irrigation_need_mm_sum_7d,float64,predictora_historica,disponible antes de la prediccion,False,usar solo con desplazamiento temporal,1,0.67
+net_irrigation_need_mm_sum_14d,float64,predictora_historica,disponible antes de la prediccion,False,usar solo con desplazamiento temporal,1,0.67
