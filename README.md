@@ -97,7 +97,6 @@ El cierre conjunto de los capítulos 3 y 4 tras la revisión del tutor se recoge
 La forma de trabajar con ramas, commits, push y pull requests se explica en [`CONTRIBUTING.md`](CONTRIBUTING.md). La justificación metodológica para la memoria está en [`docs/memoria/03_03_planificacion_organizacion_proyecto.md`](docs/memoria/03_03_planificacion_organizacion_proyecto.md).
 
 ## Datos sensibles
-
 No se almacenan en este repositorio credenciales, contraseñas ni claves de acceso a las APIs. Las variables de entorno se gestionan mediante un fichero `.env` local que queda excluido por el `.gitignore`.
 
 
