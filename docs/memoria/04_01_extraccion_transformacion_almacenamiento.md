@@ -8,21 +8,33 @@ el análisis. Esta separación permite auditar cada recomendación, repetir el
 procesamiento cuando cambien las reglas y evitar que una corrección destruya el
 contenido recibido de la fuente.
 
-El piloto utiliza como referencia el pimiento bajo invernadero en Almería. Se ha
+El piloto utiliza como referencia el pimiento al aire libre en Almería. Se ha
 extraído un ciclo completo del 1 de mayo al 30 de septiembre de 2025 para la
 estación SiAR `AL01` La Mojonera, junto con las necesidades hídricas del
 pimiento en esa misma estación y periodo. Las predicciones se obtienen para el
-municipio AEMET `04013` Almería. La arquitectura conserva identificadores de
-fuente, estación, municipio, cultivo y tiempo para poder ampliarla posteriormente
-a otros cultivos y zonas de España.
+municipio AEMET `04013` Almería. Esta configuración es un caso de validación y
+no una restricción fija del producto. El diseño conserva identificadores de
+fuente, estación, municipio, cultivo y tiempo para que la selección del usuario
+determine qué datos se consultan en cada ejecución.
 
 ![Flujo de procesamiento de datos del piloto](../images/procesamiento_datos_4_1.png)
 
-*Figura 4.1. Flujo implementado desde las fuentes hasta las primeras tablas
-normalizadas. Los gráficos inferiores utilizan datos reales de la extracción del
-24 de septiembre de 2026.*
+*Figura 4.1. ETL parametrizable desde la selección del usuario hasta la tabla
+analítica del piloto. Los gráficos inferiores utilizan datos reales de la
+extracción del 24 de septiembre de 2026.*
 
 ## 4.1.1. Fuentes utilizadas
+
+| Organismo y producto | Acceso oficial | Datos utilizados | Función en el DSS |
+|---|---|---|---|
+| Ministerio de Agricultura, Pesca y Alimentación, SiAR | Web API SiAR v1, `https://servicio.mapa.gob.es/siarapi/API/V1` | Observaciones por estación, ET0, precipitación efectiva y catálogos | Histórico agroclimático y trazabilidad espacial. |
+| Ministerio de Agricultura, Pesca y Alimentación, SiAR | Web de cálculo de necesidades hídricas, `https://servicio.mapa.gob.es/siarweb/necesidadesHidricas/calculo` | Kc, ET0, ETc, Pe y necesidad neta por cultivo, estación y periodo | Referencia agronómica y variable objetivo del piloto. |
+| Agencia Estatal de Meteorología | AEMET OpenData, `https://opendata.aemet.es/opendata/api` | Predicción municipal diaria y horaria | Anticipación meteorológica para recomendaciones futuras. |
+
+Las respuestas de la Web API SiAR y AEMET se conservan con su fecha de
+ingestión, parámetros y archivo de procedencia. El CSV agronómico se acompaña de
+un fichero de metadatos que identifica organismo, URL, estación, comarca,
+cultivo, periodo y fecha de descarga.
 
 ### SiAR
 
@@ -38,8 +50,8 @@ fuente histórica principal. Se han incorporado:
 
 La consulta diaria se realiza con `DatosCalculados=true` para obtener ET0 y
 precipitación efectiva junto con las variables meteorológicas observadas. Estos
-datos representan condiciones exteriores y no miden directamente el microclima
-del invernadero.
+datos representan el entorno de la estación y no una medición directa de la
+parcela concreta.
 
 ### AEMET OpenData
 
@@ -68,7 +80,40 @@ acompaña de metadatos con la consulta, procedencia, estación, comarca, cultivo
 fecha de descarga. Su resultado se utiliza como baseline agronómico y referencia
 de validación, no como una medición del riego óptimo real.
 
-## 4.1.2. Extracción
+## 4.1.2. Configuración dinámica y alcance del piloto
+
+El flujo se ha planteado como una ETL parametrizable. En el producto final, el
+usuario seleccionará la ubicación de la explotación, el cultivo, el periodo y
+el horizonte de recomendación. Estos valores determinan las consultas y tablas
+que se generan:
+
+| Selección | Parámetros derivados | Datos que cambian |
+|---|---|---|
+| Ubicación | estación SiAR y municipio AEMET | Observaciones agroclimáticas y predicciones locales. |
+| Cultivo | comarca, calendario y curva Kc | ETc y necesidad hídrica de referencia. |
+| Periodo | fecha inicial y final | Volumen y campaña histórica descargada. |
+| Horizonte | diario o detalle horario | Producto AEMET y granularidad de la recomendación. |
+
+La extracción Python ya admite estación, municipio y fechas mediante parámetros
+de línea de comandos. La transformación identifica el cultivo, la estación y el
+periodo a partir del CSV agronómico y sus metadatos. En la configuración actual
+se fijan `Pimiento`, `Almería`, `AL01`, `04013` y el ciclo de mayo a septiembre
+de 2025 para disponer de un caso reproducible. La selección automática de todas
+las combinaciones cultivo-zona y su validación agronómica constituye una fase de
+ampliación; no se considera ya implementada para todo el territorio nacional.
+
+El flujo lógico es:
+
+```text
+selección del usuario
+    -> cultivo, ubicación, estación, municipio y fechas
+    -> extracción de las fuentes correspondientes
+    -> normalización y controles de calidad
+    -> tabla analítica
+    -> predicción y recomendación
+```
+
+## 4.1.3. Extracción
 
 La extracción se implementa en Python mediante clientes independientes para
 SiAR y AEMET. Las credenciales se leen desde variables de entorno y nunca se
@@ -107,7 +152,7 @@ con una pausa de 60 segundos entre peticiones. Después se ordenan y deduplican
 los registros y se escribe un único archivo raw. Los catálogos se descargan de
 forma independiente y con una frecuencia inferior a las series meteorológicas.
 
-## 4.1.3. Capa raw
+## 4.1.4. Capa raw
 
 La capa `data/raw` conserva los JSON sin modificar su estructura interna:
 
@@ -130,7 +175,7 @@ cargas incrementales sin sobrescribir ejecuciones anteriores. Los archivos raw
 no se almacenan en Git debido a su volumen. El repositorio conserva el código,
 las pruebas, los esquemas y la documentación necesarios para reproducirlos.
 
-## 4.1.4. Transformación y normalización
+## 4.1.5. Transformación y normalización
 
 El segundo proceso selecciona la extracción más reciente de cada producto y
 genera tablas planas. Las reglas implementadas son:
@@ -160,7 +205,7 @@ observación describe lo que ocurrió y una predicción describe lo que se esper
 en un momento concreto. La unión para evaluación se realizará posteriormente
 mediante fecha válida, fecha de emisión y horizonte.
 
-## 4.1.5. Tablas interim
+## 4.1.6. Tablas interim
 
 El proceso genera cinco CSV codificados en UTF-8:
 
@@ -198,7 +243,40 @@ Ejemplo de la predicción diaria AEMET:
 | 26/09/2026 | D+2 | 21 | 31 | 0 % |
 | 28/09/2026 | D+4 | 21 | 28 | 30 % |
 
-## 4.1.6. Controles de calidad
+## 4.1.7. Volumen antes y después de la limpieza
+
+La limpieza no elimina automáticamente las filas que contienen ausencias. Se
+conservan para mantener la trazabilidad y se marcan mediante controles de
+calidad. Por este motivo, las 150 observaciones SiAR y las 150 filas del CSV de
+necesidades permanecen en la capa normalizada, pero solo 148 días contienen una
+variable objetivo válida y pueden utilizarse en aprendizaje supervisado.
+
+| Etapa | Conjunto | Entrada o salida | Filas | Variables | Filas válidas | Avisos | Duplicados |
+|---|---|---|---:|---:|---:|---:|---:|
+| Raw | SiAR meteorológico | JSON original | 150 | n.a. | n.a. | n.a. | n.a. |
+| Raw externo | Necesidades del pimiento | CSV oficial | 150 | 6 | n.a. | n.a. | n.a. |
+| Raw | AEMET diaria | Objeto municipal | 1 | n.a. | n.a. | n.a. | n.a. |
+| Raw | AEMET horaria | Objeto municipal | 1 | n.a. | n.a. | n.a. | n.a. |
+| Interim | SiAR meteorológico normalizado | CSV | 150 | 22 | 148 con ET0 | 2 | 0 |
+| Interim | Necesidades hídricas normalizadas | CSV | 150 | 15 | 148 con necesidad neta | 2 | 0 |
+| Interim | Predicción AEMET diaria | CSV | 7 | 22 | 7 | 0 | 0 |
+| Interim | Predicción AEMET horaria | CSV | 48 | 22 | 45 sin avisos | 3 | 0 |
+| Processed | Tabla analítica integrada | CSV | 150 | 88 | 148 etiquetas | 2 | 0 |
+
+En AEMET, una fila raw representa un objeto municipal que contiene una serie
+anidada. La normalización lo despliega en siete fechas diarias y 48 instantes
+horarios; por tanto, el aumento de filas no es una duplicación. La tabla
+`processed` conserva 150 filas y ocupa aproximadamente 133 kB. Para el modelado
+se utilizan 148 observaciones: 125 en desarrollo y 23 en prueba final. AEMET no
+se une todavía al entrenamiento porque la predicción disponible corresponde a
+2026 y el ciclo histórico de SiAR corresponde a 2025.
+
+Estas cifras se regeneran mediante
+`python -m src.analysis.build_etl_audit_4_1` y quedan registradas en
+`docs/data_samples/etl_volume_summary_4_1.csv`. De esta forma, la tabla de la
+memoria puede contrastarse con los archivos reales del proyecto.
+
+## 4.1.8. Controles de calidad
 
 Cada registro recibe `quality_status` y `quality_issues`. Se comprueban:
 
@@ -231,7 +309,7 @@ El resumen obtenido fue:
 | AEMET diaria | 7 | 0 | 0 | 0 |
 | AEMET horaria | 48 | 0 | 3 | n.a. |
 
-## 4.1.7. Almacenamiento y escalabilidad
+## 4.1.9. Almacenamiento y escalabilidad
 
 Los CSV de la capa interim facilitan la inspección inicial y el intercambio de
 muestras. Para una extracción nacional o un histórico extenso se propone migrar
@@ -245,7 +323,7 @@ podrán permanecer en almacenamiento de objetos. Esta separación evita utilizar
 la base transaccional como repositorio de archivos y mantiene una arquitectura
 compatible con ejecución local y despliegue cloud.
 
-## 4.1.8. Reproducibilidad y seguridad
+## 4.1.10. Reproducibilidad y seguridad
 
 El proceso se reproduce mediante:
 
@@ -253,6 +331,7 @@ El proceso se reproduce mediante:
 python -m src.data.extract_pilot
 python -m src.data.extract_siar_history --start-date 2025-05-01 --end-date 2025-09-30
 python -m src.data.transform_interim
+python -m src.analysis.build_etl_audit_4_1
 python -m src.visualization.build_etl_visual
 ```
 
@@ -264,12 +343,12 @@ y rachas.
 Las credenciales se guardan únicamente en `.env`, excluido de Git. El archivo
 `.env.example` documenta los nombres de las variables sin incluir valores reales.
 
-## 4.1.9. Limitaciones
+## 4.1.11. Limitaciones
 
 El ciclo completo permite validar la integración, pero un único año y una sola
 estación todavía no son suficientes para entrenar un modelo generalizable. Antes
 del modelado se deberán añadir varias campañas y, si el alcance lo exige, otras
 estaciones de Almería. También se verificará la unidad contractual de cada
-variable con la documentación oficial. SiAR y AEMET representan condiciones
-exteriores, por lo que las recomendaciones para invernadero deberán declarar
-esta limitación e incorporar sensores interiores cuando estén disponibles.
+variable con la documentación oficial. SiAR y AEMET representan el entorno de
+sus estaciones o municipios, por lo que la recomendación deberá declarar esta
+limitación e incorporar datos locales de parcela cuando estén disponibles.

@@ -8,9 +8,9 @@ El equipo está formado por cuatro personas. Cada bloque del índice del TFM tie
 
 Se sigue un esquema sencillo de ramas para evitar conflictos entre los distintos miembros del equipo.
 
-La rama `main` contiene siempre la versión estable del proyecto, la que se entrega en cada práctica del máster. No se trabaja nunca directamente sobre ella.
+La rama `main` contiene siempre la versión estable e integrada del proyecto. Los cambios se preparan en ramas y se incorporan mediante pull request.
 
-Cada persona crea su propia rama de trabajo a partir de `main` cuando empieza una tarea nueva, con un nombre que indique de qué se trata, por ejemplo `etl-aemet`, `eda-cultivos` o `dashboard-powerbi`. Cuando la tarea está terminada se abre una pull request hacia `main` y al menos otra persona del equipo revisa los cambios antes de fusionarlos.
+Cada persona crea una rama de trabajo a partir de `main` cuando empieza una tarea nueva. Se utiliza el formato `persona/tema`, por ejemplo `adrian/procesamiento-ml`, `luis/modelos` o `alicia/documentacion`. Cuando la tarea está terminada se abre una pull request hacia `main` y, cuando sea posible, otra persona del equipo revisa los cambios antes de fusionarlos. El procedimiento paso a paso se recoge en `CONTRIBUTING.md`.
 
 ## Mensajes de commit
 
@@ -26,4 +26,4 @@ La memoria del TFM se redacta en los ficheros de la carpeta `docs/memoria` y se 
 
 ## Datos y credenciales
 
-No se sube al repositorio ningún dato real descargado de las APIs ni ninguna credencial de acceso. La estructura de carpetas de `data/` se mantiene vacía en el repositorio mediante ficheros `.gitkeep` y cada persona genera sus propios datos locales siguiendo los scripts de `src/data`.
+No se suben credenciales ni archivos `.env`. Los datos raw, las tablas completas generadas y los modelos serializados se excluyen por defecto. Pueden versionarse muestras ligeras, métricas, figuras y conjuntos públicos concretos aprobados por el equipo, como el CSV oficial del piloto de necesidades hídricas, siempre que no contengan información sensible y su procedencia quede documentada.

@@ -1,0 +1,10 @@
+﻿stage,dataset,source,rows,columns,valid_target_rows,pass_rows,warning_rows,duplicate_rows,missing_calendar_dates,file_size_bytes,notes
+raw,siar_weather_daily,SiAR API,150,,,,,,,108704,Observaciones diarias de la estación y periodo seleccionados.
+raw_external,siar_crop_water_needs,SiAR web,150,6,,,,,,5417,"CSV oficial dependiente de estación, comarca, cultivo y periodo."
+raw,aemet_forecast_daily_root,AEMET OpenData,1,,,,,,,21448,Un objeto municipal que se despliega en siete fechas válidas.
+raw,aemet_forecast_hourly_root,AEMET OpenData,1,,,,,,,50700,Un objeto municipal que se despliega en 48 instantes horarios.
+interim,siar_weather_daily,SiAR API,150,22,148,148,2,0,3,37879,150 filas conservadas; 148 con ET0 válida.
+interim,siar_crop_water_needs_daily,SiAR web,150,15,148,148,2,0,3,24702,150 filas conservadas; 148 con necesidad neta válida.
+interim,aemet_forecast_daily,AEMET OpenData,7,22,,7,0,0,,2042,El objeto raíz se normaliza a una fila por fecha válida.
+interim,aemet_forecast_hourly,AEMET OpenData,48,22,,45,3,0,,13246,El objeto raíz se normaliza a una fila por instante válido.
+processed,modeling_dataset_daily,SiAR integrado,150,88,148,148,2,0,3,132990,150 × 88; 148 etiquetas válidas para modelización.

@@ -8,7 +8,7 @@ Rama de trabajo: `Luismd`
 Se ha desarrollado y validado el apartado 4.2 del TFM, dedicado al análisis
 exploratorio y a la preparación de las variables que utilizarán los modelos
 predictivos. El trabajo parte de las tablas normalizadas en el apartado 4.1 y
-mantiene como caso piloto el pimiento bajo invernadero en Almería.
+mantiene como caso piloto el pimiento al aire libre en Almería.
 
 El resultado principal es un proceso reproducible que une las observaciones
 meteorológicas con las necesidades hídricas de SiAR, conserva sus indicadores
@@ -148,4 +148,4 @@ El apartado 4.2 queda preparado para continuar con el 4.3:
 
 Un único ciclo de cultivo permite validar el flujo técnico, pero no es
 suficiente para demostrar que el modelo generaliza a otros años, estaciones o
-condiciones de invernadero.
+condiciones de parcela.

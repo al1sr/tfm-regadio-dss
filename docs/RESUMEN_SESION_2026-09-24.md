@@ -107,7 +107,7 @@ indica una observación válida y no la ausencia de dato.
 - **AEMET:** predicciones futuras para anticipar y ajustar la recomendación.
 
 Las necesidades SiAR no deben presentarse como riego óptimo real. No incluyen
-humedad del suelo, microclima interior del invernadero, eficiencia del sistema,
+humedad ni condiciones específicas de la parcela, eficiencia del sistema,
 riegos aplicados ni respuesta productiva. Tampoco debe entrenarse un modelo con
 `ET0`, `Kc` y `Pe` para predecir directamente `ETc - Pe` y después interpretar
 una métrica alta como aprendizaje, porque existiría fuga algebraica de
@@ -164,4 +164,4 @@ El apartado 4.1 queda cerrado para el piloto. El siguiente bloque es el 4.2:
 
 Un solo ciclo sirve para validar el proceso, pero no es suficiente para afirmar
 que el modelo generaliza a otras campañas, estaciones o condiciones de
-invernadero.
+parcela.
