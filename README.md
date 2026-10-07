@@ -93,6 +93,7 @@ El texto desarrollado del apartado 4.2 y el código de preparación de variables
 El resumen de la sesión del apartado 4.2 está en [`docs/RESUMEN_SESION_2026-09-28_LUISM.md`](docs/RESUMEN_SESION_2026-09-28_LUISM.md).
 El desarrollo, los resultados y el resumen del apartado 4.3 están en [`docs/memoria/04_03_desarrollo_evaluacion_modelo_predictivo.md`](docs/memoria/04_03_desarrollo_evaluacion_modelo_predictivo.md), [`docs/data_samples/model_evaluation_4_3.json`](docs/data_samples/model_evaluation_4_3.json) y [`docs/RESUMEN_SESION_2026-09-28_LUISM_4_3.md`](docs/RESUMEN_SESION_2026-09-28_LUISM_4_3.md).
 El cierre conjunto de los capítulos 3 y 4 tras la revisión del tutor se recoge en [`docs/RESUMEN_SESION_2026-10-07.md`](docs/RESUMEN_SESION_2026-10-07.md).
+El estado global del TFM y la hoja de ruta priorizada se mantienen en [`docs/ESTADO_TFM_Y_TRABAJO_PENDIENTE.md`](docs/ESTADO_TFM_Y_TRABAJO_PENDIENTE.md).
 
 La forma de trabajar con ramas, commits, push y pull requests se explica en [`CONTRIBUTING.md`](CONTRIBUTING.md). La justificación metodológica para la memoria está en [`docs/memoria/03_03_planificacion_organizacion_proyecto.md`](docs/memoria/03_03_planificacion_organizacion_proyecto.md).
 
