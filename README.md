@@ -2,7 +2,7 @@
 
 Trabajo Fin de Máster en Data Science. El proyecto desarrolla un sistema de apoyo a la decisión (DSS) orientado a estimar las necesidades de riego de distintos tipos de cultivo a partir de variables meteorológicas, agrometeorológicas e hidrológicas, con el fin de ofrecer recomendaciones de riego comprensibles y trazables para agricultores, cooperativas y gestores de explotaciones.
 
-El sistema integra datos de fuentes públicas como AEMET, SiAR y el Boletín Hidrológico del MITECO mediante un proceso ETL, los almacena en una base de datos relacional y aplica técnicas de aprendizaje automático para estimar la demanda hídrica de los cultivos. El resultado se presenta a través de un cuadro de mando pensado para apoyar, y no sustituir, el criterio agronómico del usuario final.
+El usuario determina ubicación, cultivo y periodo; estos parámetros condicionan las fuentes, estaciones y datos que se extraen. El prototipo actual integra SiAR y AEMET mediante una ETL en Python con almacenamiento local por capas, y utiliza pimiento **al aire libre** en Almería como piloto reproducible, no como límite funcional del producto. La incorporación del Boletín Hidrológico del MITECO, la persistencia en MySQL y el cuadro de mando forman parte de la arquitectura objetivo. El sistema está pensado para apoyar, y no sustituir, el criterio agronómico del usuario final.
 
 ## Autoría
 
@@ -11,7 +11,7 @@ Luis Moreno Díaz, Adrián Pérez Lombal, Manuel Ramos Alascio y Alicia Santamar
 ## Estructura del repositorio
 
 ```
-├── data/                  Datos del proyecto (no se suben datos reales al repositorio, ver .gitignore)
+├── data/                  Datos del proyecto (se excluyen raw y generados, salvo excepciones públicas aprobadas)
 │   ├── raw/                Datos descargados tal cual llegan de AEMET, SiAR y MITECO
 │   ├── interim/             Datos intermedios, todavía en proceso de limpieza
 │   ├── processed/          Datos ya depurados y listos para el análisis o el modelado
@@ -60,13 +60,11 @@ Luis Moreno Díaz, Adrián Pérez Lombal, Manuel Ramos Alascio y Alicia Santamar
 
 ## Entorno de desarrollo y tecnologías
 
-El proyecto se apoya en el siguiente conjunto de tecnologías, coherente con el planteamiento recogido en la propuesta inicial:
+El proyecto distingue entre tecnologías ya utilizadas en el prototipo y componentes previstos en la arquitectura final:
 
-- Extracción y transformación de datos: Apache Hop, para construir los pipelines que conectan las APIs de AEMET y SiAR con la base de datos.
-- Almacenamiento: MySQL como base de datos relacional para los datos ya integrados.
-- Procesamiento y modelado: Python (pandas, scikit learn, SciPy) para el análisis exploratorio, la ingeniería de variables y el entrenamiento de modelos.
-- Escalabilidad opcional: PySpark bajo contenedores Docker si el volumen de datos históricos lo requiere.
-- Visualización: Power BI o Tableau para el cuadro de mando final.
+- Implementado: Python, pandas y NumPy para extracción, normalización, calidad y preparación; scikit-learn y XGBoost para modelado; Matplotlib para evidencias; Jupyter y Visual Studio Code para desarrollo; Git y GitHub para versionado.
+- Diseñado o previsto: MySQL para persistencia relacional, Apache Hop para orquestación visual, Power BI o Tableau para presentación y Docker para despliegue reproducible.
+- Condicional: PySpark solo si una futura ampliación nacional y multianual justifica procesamiento distribuido; no es necesario para el piloto actual.
 
 Para reproducir el entorno de Python se puede usar indistintamente `environment.yml` (conda) o `requirements.txt` (pip y entornos virtuales). Se recomienda trabajar siempre dentro de un entorno virtual propio del proyecto para evitar conflictos de versiones entre los distintos miembros del equipo.
 
@@ -82,12 +80,21 @@ Para reproducir el entorno de Python se puede usar indistintamente `environment.
 8. Descargar desde la web de necesidades netas el CSV del cultivo y guardarlo en `data/external` junto con un fichero `.metadata.json`. El repositorio incluye una [muestra normalizada del ciclo de pimiento](docs/data_samples/siar_necesidades_pimiento_AL01_2025_sample.csv) y una [plantilla de metadatos](docs/data_samples/siar_necesidades_pimiento_AL01_2025.metadata.example.json).
 9. Normalizar las últimas extracciones con `python -m src.data.transform_interim`. El proceso genera las tablas de clima SiAR, necesidades hídricas del cultivo, predicciones AEMET y su resumen de calidad en `data/interim`.
 10. Regenerar el ejemplo visual con `python -m src.visualization.build_etl_visual`.
+11. Auditar los volúmenes de las capas con `python -m src.analysis.build_etl_audit_4_1`. El resultado muestra cuántas filas entran en raw, cuántas se conservan tras la normalización y cuántas son válidas para modelar.
+12. Entrenar y comparar Persistencia, Ridge, Random Forest, KNN, SVR y XGBoost con `python -m src.models.train_evaluate`.
 
+Las fuentes, variables y controles de calidad del apartado 3.1 se sintetizan en [`docs/memoria/03_01_fuentes_variables_calidad_datos.md`](docs/memoria/03_01_fuentes_variables_calidad_datos.md). Los inventarios técnicos completos se mantienen en [`docs/FUENTE_DATOS_SIAR.md`](docs/FUENTE_DATOS_SIAR.md), [`docs/FUENTE_DATOS_AEMET.md`](docs/FUENTE_DATOS_AEMET.md) y en el [catálogo de variables](docs/data_samples/feature_catalog_4_2.csv), evitando duplicar diccionarios.
+La arquitectura, las tecnologías y el flujo de información del apartado 3.2 están en [`docs/memoria/03_02_arquitectura_tecnologias_flujo.md`](docs/memoria/03_02_arquitectura_tecnologias_flujo.md), con su [figura reproducible](docs/images/arquitectura_sistema_3_2.png) y el código que la genera en `src/visualization/build_architecture_visual.py`.
 La selección y el tratamiento conjunto de los datos de SiAR y AEMET se documentan en [`docs/ESTRATEGIA_DATOS_DSS.md`](docs/ESTRATEGIA_DATOS_DSS.md).
 Los resultados y las incidencias de la primera carga real se recogen en [`docs/PRIMERA_EXTRACCION_PILOTO.md`](docs/PRIMERA_EXTRACCION_PILOTO.md).
 El texto desarrollado del apartado 4.1 y su ejemplo visual están en [`docs/memoria/04_01_extraccion_transformacion_almacenamiento.md`](docs/memoria/04_01_extraccion_transformacion_almacenamiento.md).
+El desglose reproducible de volumen y calidad está en [`docs/data_samples/etl_volume_summary_4_1.csv`](docs/data_samples/etl_volume_summary_4_1.csv).
 El texto desarrollado del apartado 4.2 y el código de preparación de variables están en [`docs/memoria/04_02_analisis_exploratorio_preparacion_variables.md`](docs/memoria/04_02_analisis_exploratorio_preparacion_variables.md) y `src/features/feature_engineering.py`.
-El desarrollo, los resultados y el resumen del apartado 4.3 están en [`docs/memoria/04_03_desarrollo_evaluacion_modelo_predictivo.md`](docs/memoria/04_03_desarrollo_evaluacion_modelo_predictivo.md), [`docs/data_samples/model_evaluation_4_3.json`](docs/data_samples/model_evaluation_4_3.json)
+El resumen de la sesión del apartado 4.2 está en [`docs/RESUMEN_SESION_2026-09-28_LUISM.md`](docs/RESUMEN_SESION_2026-09-28_LUISM.md).
+El desarrollo, los resultados y el resumen del apartado 4.3 están en [`docs/memoria/04_03_desarrollo_evaluacion_modelo_predictivo.md`](docs/memoria/04_03_desarrollo_evaluacion_modelo_predictivo.md), [`docs/data_samples/model_evaluation_4_3.json`](docs/data_samples/model_evaluation_4_3.json) y [`docs/RESUMEN_SESION_2026-09-28_LUISM_4_3.md`](docs/RESUMEN_SESION_2026-09-28_LUISM_4_3.md).
+El cierre conjunto de los capítulos 3 y 4 tras la revisión del tutor se recoge en [`docs/RESUMEN_SESION_2026-10-07.md`](docs/RESUMEN_SESION_2026-10-07.md).
+
+La forma de trabajar con ramas, commits, push y pull requests se explica en [`CONTRIBUTING.md`](CONTRIBUTING.md). La justificación metodológica para la memoria está en [`docs/memoria/03_03_planificacion_organizacion_proyecto.md`](docs/memoria/03_03_planificacion_organizacion_proyecto.md).
 
 ## Datos sensibles
 No se almacenan en este repositorio credenciales, contraseñas ni claves de acceso a las APIs. Las variables de entorno se gestionan mediante un fichero `.env` local que queda excluido por el `.gitignore`.

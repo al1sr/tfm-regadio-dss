@@ -200,7 +200,7 @@ Estos resultados son una **estimación agronómica calculada**, no una medición
 - eficiencia, caudal o uniformidad del sistema de riego;
 - fecha real de trasplante y fase fenológica observada;
 - prácticas de cultivo, riegos anteriores o drenaje;
-- microclima interior del invernadero;
+- condiciones locales específicas de la parcela;
 - producción, calidad o estrés real de la planta.
 
 Por tanto, la necesidad neta de SiAR se usará como **baseline, etiqueta débil y referencia de validación agronómica**, pero no se presentará como la dosis óptima observada.
@@ -212,7 +212,7 @@ Si la variable objetivo es `ETc - Pe` y se introducen simultáneamente `ET0`, `K
 Se plantean dos experimentos diferentes:
 
 1. **Baseline determinista:** calcular directamente `max(ET0 × Kc − Pe, 0)`. No necesita aprendizaje automático y debe ser siempre el punto de comparación.
-2. **Modelo corrector o avanzado:** aprender el ajuste respecto al baseline utilizando sensores de suelo/invernadero, estado fenológico, riegos aplicados y resultados agronómicos. Este sí puede aportar valor, pero requiere datos de campo adicionales.
+2. **Modelo corrector o avanzado:** aprender el ajuste respecto al baseline utilizando sensores de suelo y parcela, estado fenológico, riegos aplicados y resultados agronómicos. Este sí puede aportar valor, pero requiere datos de campo adicionales.
 
 Si todavía no existen datos reales de campo, puede construirse un modelo demostrativo con las necesidades SiAR como etiqueta, dejando claro que se trata de imitar el método SiAR y evitando afirmar que predice el riego óptimo real.
 
@@ -281,11 +281,11 @@ No se utilizarán directamente como predictores en el modelo inicial, pero ayuda
 
 El formulario público de SiAR muestra actualmente las siguientes estaciones de la provincia: `AL01` La Mojonera, `AL02` Almería, `AL04` Tabernas, `AL05` Fiñana, `AL06` Virgen de Fátima-Cuevas de Almanzora, `AL07` Huércal-Overa, `AL08` Cuevas de Almanzora, `AL10` Adra, `AL11` Níjar, `AL12` Tíjola y `AL201` Cajamar-PITA.
 
-Para el piloto de pimiento bajo invernadero, `AL01` La Mojonera es la primera candidata por su ubicación en una zona intensiva de invernaderos. La selección definitiva no debe basarse solo en el nombre o la distancia: se comprobarán vigencia, porcentaje de datos válidos, continuidad histórica y similitud climática con la parcela.
+Para el piloto de pimiento al aire libre, `AL01` La Mojonera se utiliza por la disponibilidad y continuidad de sus datos. La selección definitiva no debe basarse solo en el nombre o la distancia: se comprobarán vigencia, porcentaje de datos válidos, continuidad histórica y similitud climática con la parcela.
 
-Una estación exterior no representa completamente el microclima de un invernadero. Por tanto, el prototipo debe declarar esta limitación y diseñarse para incorporar en el futuro sensores interiores de temperatura, humedad y humedad del sustrato o suelo.
+La estación representa condiciones agroclimáticas de su entorno y no mide la parcela exacta. Por tanto, el prototipo debe conservar la distancia y los metadatos de selección e incorporar en el futuro sensores locales de temperatura, humedad y humedad del suelo cuando estén disponibles.
 
-También debe revisarse el calendario agronómico: el pimiento configurado por SiAR para Campo Níjar-Bajo Andarax presenta actividad de mayo a septiembre, un calendario que puede no representar una campaña real de pimiento bajo invernadero en Almería. El usuario deberá indicar fecha de trasplante y sistema de cultivo, o se deberá configurar una curva `Kc` específica respaldada por bibliografía o datos experimentales.
+También debe revisarse el calendario agronómico: el pimiento configurado por SiAR presenta actividad de mayo a septiembre. El usuario deberá indicar fecha de trasplante y sistema de cultivo, o se deberá configurar una curva `Kc` específica respaldada por bibliografía o datos experimentales. En el piloto actual se adopta aire libre como decisión explícita de alcance.
 
 ## 10. Información que SiAR no proporciona y debemos obtener de otras fuentes
 

@@ -49,7 +49,7 @@ flowchart LR
 | Fecha, estación, coordenadas, altitud y vigencia | Crítica | Selección espacial, trazabilidad y auditoría | Crear catálogo de estaciones; elegir por distancia, cobertura y similitud, no solo por provincia. |
 | Códigos de validación | Crítica | Calidad del dato | Convertir en banderas de calidad. No utilizarlos como predictores. |
 | `EtPMon` o ET0 | Crítica | Demanda atmosférica observada y cálculo del baseline | Unidad común mm/día; conservar valor y método de cálculo. |
-| `PePMon` o precipitación efectiva | Crítica | Descuento agronómico de lluvia | No confundir con precipitación total. Revisar su validez en invernadero. |
+| `PePMon` o precipitación efectiva | Crítica | Descuento agronómico de lluvia | No confundir con precipitación total. Contrastar su representatividad para la parcela. |
 | Precipitación total | Alta | Validación de lluvia y generación de eventos | Sumar para agregados; distinguir cero, traza, ausencia y dato inválido. |
 | Temperatura media, máxima y mínima | Alta | Caracterización climática, estrés y modelos de ET0 | Comprobar rangos físicos y coherencia `mínima ≤ media ≤ máxima`. |
 | Humedad media, máxima y mínima | Alta | Demanda evaporativa y control de calidad | Normalizar a porcentaje y comprobar rango 0–100. |
@@ -101,7 +101,7 @@ incluir o solicitar:
 | Cultivo y variedad | Determinan calendario y respuesta hídrica | Pimiento como cultivo piloto. |
 | Fecha real de trasplante y fase fenológica | Permiten escoger el `Kc` del día | Debe introducirla el usuario o estimarse con reglas documentadas. |
 | Sistema de cultivo | Distingue aire libre, malla e invernadero | **Obligatorio** para interpretar lluvia y clima exterior. |
-| Curva `Kc` adecuada | Convierte ET0 en ETc | Validar si la curva SiAR representa pimiento bajo invernadero. |
+| Curva `Kc` adecuada | Convierte ET0 en ETc | Validar que la curva SiAR representa el ciclo de pimiento al aire libre seleccionado. |
 | Superficie y marco de plantación | Convierte mm en litros totales o por planta | Entrada del usuario. |
 | Eficiencia del riego | Convierte necesidad neta en dosis bruta | Parámetro de instalación; no debe asumirse silenciosamente. |
 | Caudal y número de emisores | Convierte litros en duración del riego | Entrada de la instalación. |
@@ -110,25 +110,25 @@ incluir o solicitar:
 | Riego aplicado y drenaje | Permiten cerrar el balance y aprender correcciones | Deben empezar a registrarse desde el piloto. |
 | Producción, calidad o estrés observado | Permiten evaluar optimización agronómica real | Fase avanzada. |
 
-## 4. Particularidades del pimiento bajo invernadero
+## 4. Particularidades del pimiento al aire libre
 
-El piloto no puede tratarse exactamente igual que un cultivo al aire libre:
+El piloto adopta explícitamente un sistema de cultivo al aire libre. SiAR solo
+identifica el cultivo como `Pimiento`, por lo que esta modalidad es una decisión
+de alcance del proyecto y debe quedar registrada junto con la configuración:
 
-1. **La precipitación exterior puede no llegar a las raíces.** Para un invernadero
-   cerrado, `Pe` no debe descontarse automáticamente. Se necesita un parámetro de
-   captación o entrada efectiva de lluvia. Si no existe reutilización, el valor
-   inicial prudente será cero, documentándolo como supuesto.
-2. **La estación mide el exterior.** Temperatura, humedad, radiación y viento de
-   SiAR o AEMET no representan el microclima interior. El sistema debe mostrar
-   menor confianza hasta disponer de sensores interiores.
-3. **El viento exterior afecta de forma diferente.** Su efecto depende de la
-   ventilación y apertura del invernadero.
-4. **La curva de `Kc` y el calendario pueden diferir.** El calendario observado
-   en la web de SiAR debe contrastarse con la campaña real de Almería y con la
-   fecha de trasplante introducida por el usuario.
+1. **La precipitación exterior forma parte del balance.** La precipitación
+   efectiva `Pe` puede descontarse de la demanda, conservando la diferencia entre
+   lluvia total y fracción aprovechable por el cultivo.
+2. **La estación representa el entorno, no la parcela exacta.** Temperatura,
+   humedad, radiación y viento deben interpretarse según distancia, altitud,
+   vigencia y cobertura de la estación.
+3. **La curva de `Kc` depende del ciclo.** El calendario de la web de SiAR se
+   contrasta con la fecha real de trasplante y la fase indicada por el usuario.
+4. **La dosis operativa requiere datos adicionales.** Suelo, humedad disponible,
+   eficiencia, caudal y riego aplicado no están incluidos en la referencia SiAR.
 
-Por ello, `sistema_cultivo` será una dimensión obligatoria desde el principio,
-aunque el primer prototipo solo implemente reglas específicas para invernadero.
+La dimensión `sistema_cultivo` se mantiene en el diseño para permitir futuras
+modalidades, pero el prototipo actual solo se interpreta como aire libre.
 
 ## 5. Papel de los datos en cada módulo del TFM
 
@@ -172,7 +172,7 @@ Se propone esta secuencia:
    viento, estacionalidad y ubicación, entrenando y validando contra ET0 observada
    de SiAR. No se afirmará que equivale a Penman–Monteith si falta radiación.
 3. **Mejora futura:** incorporar una fuente de predicción con radiación o sensores
-   de invernadero y recalibrar el modelo.
+   de parcela y recalibrar el modelo.
 
 ### 5.4. Modelo de ciencia de datos
 
@@ -321,14 +321,14 @@ ha demostrado un ahorro real de agua.
 
 Para el piloto se recomienda:
 
-1. Pimiento bajo invernadero como único cultivo.
+1. Pimiento al aire libre como único cultivo.
 2. Provincia de Almería, empezando por `AL01` La Mojonera y ampliando solo a las
    estaciones con buena cobertura.
 3. Resolución diaria como núcleo del modelo y salida semanal derivada.
 4. Histórico diario de SiAR como fuente principal.
 5. Predicción diaria AEMET y horaria para las primeras 48 horas.
 6. CSV SiAR de pimiento como baseline de validación.
-7. Reglas explícitas para eficiencia y entrada de lluvia en invernadero.
+7. Reglas explícitas para eficiencia de riego y precipitación efectiva.
 8. Registro desde ahora de cada predicción AEMET y, si es posible, de riegos reales.
 
 La estructura seguirá siendo extensible a cualquier cultivo y zona mediante

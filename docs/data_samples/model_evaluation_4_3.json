@@ -32,6 +32,15 @@
     "net_irrigation_need_estimated_mm"
   ],
   "prediction_constraint": "Predicciones recortadas a un mínimo de 0 mm/día",
+  "model_definitions": {
+    "persistence": "Baseline de un día: la estimación de t es la necesidad observada en t-1; si falta, utiliza la mediana aprendida en entrenamiento.",
+    "ridge": "Regresión lineal regularizada con imputación y escalado.",
+    "random_forest": "Conjunto conservador de 300 árboles de regresión.",
+    "knn": "Regresión por siete vecinos próximos, distancia y variables escaladas.",
+    "svr": "Support Vector Regression con kernel RBF, imputación y escalado.",
+    "xgboost": "Gradient boosting de árboles con regularización y semilla fija."
+  },
+  "persistence_horizon": "one_step_ahead",
   "split": {
     "development_rows": 125,
     "test_rows": 23,
@@ -54,6 +63,12 @@
           "std": 0.12675889366930027,
           "min": 0.4653510641475163,
           "max": 0.7438131919481725
+        },
+        "r2": {
+          "mean": 0.19849441347647132,
+          "std": 0.5740056290378108,
+          "min": -0.5849232967737832,
+          "max": 0.7743668146695585
         },
         "bias_mm_day": {
           "mean": 0.013333333333333327,
@@ -81,6 +96,12 @@
           "min": 0.45543694186029954,
           "max": 1.2649410957103282
         },
+        "r2": {
+          "mean": -0.875396853649152,
+          "std": 2.1141892163625764,
+          "min": -3.844312684552393,
+          "max": 0.9154075251977531
+        },
         "bias_mm_day": {
           "mean": 0.292373021727319,
           "std": 0.42246371622993895,
@@ -107,6 +128,12 @@
           "min": 1.1658425293238188,
           "max": 1.604354717815297
         },
+        "r2": {
+          "mean": -2.472047825349397,
+          "std": 1.7745565763866664,
+          "min": -4.2514030095742035,
+          "max": -0.04972614197673675
+        },
         "bias_mm_day": {
           "mean": -0.4315610497240166,
           "std": 0.9977550839279504,
@@ -118,6 +145,102 @@
           "std": 1.0041228446143629,
           "min": 5.287306243968451,
           "max": 7.71897861902912
+        }
+      },
+      "knn": {
+        "mae_mm_day": {
+          "mean": 0.9374124867052807,
+          "std": 0.2839093777682464,
+          "min": 0.6772117235127253,
+          "max": 1.3323306817179486
+        },
+        "rmse_mm_day": {
+          "mean": 1.1133757255286547,
+          "std": 0.26764387130650075,
+          "min": 0.8497316211538849,
+          "max": 1.4803970601197391
+        },
+        "r2": {
+          "mean": -1.8710419844916073,
+          "std": 2.3349660640778387,
+          "min": -5.011078598084572,
+          "max": 0.583977638442005
+        },
+        "bias_mm_day": {
+          "mean": -0.4125437763907156,
+          "std": 0.8603541222117301,
+          "min": -1.3323306817179486,
+          "max": 0.7371379481371657
+        },
+        "weekly_mae_mm": {
+          "mean": 5.383323860774586,
+          "std": 2.097559786881675,
+          "min": 3.319266077222045,
+          "max": 8.260450226651283
+        }
+      },
+      "svr": {
+        "mae_mm_day": {
+          "mean": 1.052100489327617,
+          "std": 0.1358910832612969,
+          "min": 0.8638599055060755,
+          "max": 1.1797422924929095
+        },
+        "rmse_mm_day": {
+          "mean": 1.2625844499662329,
+          "std": 0.09698591358360392,
+          "min": 1.1432628135724046,
+          "max": 1.380821385025685
+        },
+        "r2": {
+          "mean": -2.5324183024056777,
+          "std": 2.126997558680657,
+          "min": -4.22963029167939,
+          "max": 0.4669507009212086
+        },
+        "bias_mm_day": {
+          "mean": -0.7305326094585155,
+          "std": 0.5885086576479366,
+          "min": -1.1797422924929095,
+          "max": 0.10084373410122846
+        },
+        "weekly_mae_mm": {
+          "mean": 5.876067010791225,
+          "std": 1.1260922259623765,
+          "min": 4.564852590667664,
+          "max": 7.31440221345604
+        }
+      },
+      "xgboost": {
+        "mae_mm_day": {
+          "mean": 1.1412584533486314,
+          "std": 0.34007524678351947,
+          "min": 0.8497434216160927,
+          "max": 1.6182877608268493
+        },
+        "rmse_mm_day": {
+          "mean": 1.377725247986083,
+          "std": 0.2974269868088984,
+          "min": 0.9998230413649574,
+          "max": 1.7266346596038231
+        },
+        "r2": {
+          "mean": -3.0035213444998843,
+          "std": 3.087099422250166,
+          "min": -7.177054411797192,
+          "max": 0.1929706355623908
+        },
+        "bias_mm_day": {
+          "mean": -0.5354431776846609,
+          "std": 1.0243948400382215,
+          "min": -1.6182877608268493,
+          "max": 0.839443503656695
+        },
+        "weekly_mae_mm": {
+          "mean": 6.606513568454318,
+          "std": 2.475100157778622,
+          "min": 4.2753405920664465,
+          "max": 10.033384117126465
         }
       }
     },
@@ -134,20 +257,44 @@
           "persistence": {
             "mae_mm_day": 0.35838709677419367,
             "rmse_mm_day": 0.4653510641475163,
+            "r2": 0.4060397225336386,
             "bias_mm_day": -0.04096774193548386,
             "weekly_mae_mm": 0.8939999999999998
           },
           "ridge": {
             "mae_mm_day": 0.4218256985148519,
             "rmse_mm_day": 0.5042051729927707,
+            "r2": 0.30271459840718373,
             "bias_mm_day": 0.16048934981660373,
             "weekly_mae_mm": 1.9492329563895745
           },
           "random_forest": {
             "mae_mm_day": 1.24499655145631,
             "rmse_mm_day": 1.383692812438619,
+            "r2": -4.2514030095742035,
             "bias_mm_day": -1.24499655145631,
             "weekly_mae_mm": 7.71897861902912
+          },
+          "knn": {
+            "mae_mm_day": 1.3323306817179486,
+            "rmse_mm_day": 1.4803970601197391,
+            "r2": -5.011078598084572,
+            "bias_mm_day": -1.3323306817179486,
+            "weekly_mae_mm": 8.260450226651283
+          },
+          "svr": {
+            "mae_mm_day": 1.1797422924929095,
+            "rmse_mm_day": 1.380821385025685,
+            "r2": -4.22963029167939,
+            "bias_mm_day": -1.1797422924929095,
+            "weekly_mae_mm": 7.31440221345604
+          },
+          "xgboost": {
+            "mae_mm_day": 1.6182877608268493,
+            "rmse_mm_day": 1.7266346596038231,
+            "r2": -7.177054411797192,
+            "bias_mm_day": -1.6182877608268493,
+            "weekly_mae_mm": 10.033384117126465
           }
         }
       },
@@ -163,20 +310,44 @@
           "persistence": {
             "mae_mm_day": 0.5358064516129033,
             "rmse_mm_day": 0.7235329985563893,
+            "r2": -0.5849232967737832,
             "bias_mm_day": -0.05064516129032262,
             "weekly_mae_mm": 0.7516666666666657
           },
           "ridge": {
             "mae_mm_day": 1.0294807581401293,
             "rmse_mm_day": 1.2649410957103282,
+            "r2": -3.844312684552393,
             "bias_mm_day": 0.8629616748813247,
             "weekly_mae_mm": 5.074742446217396
           },
           "random_forest": {
             "mae_mm_day": 1.0424612541071272,
             "rmse_mm_day": 1.1658425293238188,
+            "r2": -3.115014324497251,
             "bias_mm_day": -1.023349595606797,
             "weekly_mae_mm": 5.287306243968451
+          },
+          "knn": {
+            "mae_mm_day": 0.6772117235127253,
+            "rmse_mm_day": 0.8497316211538849,
+            "r2": -1.1860249938322553,
+            "bias_mm_day": -0.6424385955913638,
+            "weekly_mae_mm": 3.319266077222045
+          },
+          "svr": {
+            "mae_mm_day": 1.1126992699838656,
+            "rmse_mm_day": 1.2636691513006093,
+            "r2": -3.8345753164588503,
+            "bias_mm_day": -1.1126992699838656,
+            "weekly_mae_mm": 5.748946228249973
+          },
+          "xgboost": {
+            "mae_mm_day": 0.8497434216160927,
+            "rmse_mm_day": 0.9998230413649574,
+            "r2": -2.026480257264853,
+            "bias_mm_day": -0.8274852758838284,
+            "weekly_mae_mm": 4.2753405920664465
           }
         }
       },
@@ -192,20 +363,44 @@
           "persistence": {
             "mae_mm_day": 0.4083870967741935,
             "rmse_mm_day": 0.7438131919481725,
+            "r2": 0.7743668146695585,
             "bias_mm_day": 0.13161290322580646,
             "weekly_mae_mm": 1.131999999999998
           },
           "ridge": {
             "mae_mm_day": 0.35614551954260953,
             "rmse_mm_day": 0.45543694186029954,
+            "r2": 0.9154075251977531,
             "bias_mm_day": -0.14633195951597142,
             "weekly_mae_mm": 1.3855109365408187
           },
           "random_forest": {
             "mae_mm_day": 1.065968244574251,
             "rmse_mm_day": 1.604354717815297,
+            "r2": -0.04972614197673675,
             "bias_mm_day": 0.9736629978910568,
             "weekly_mae_mm": 6.1831280769471775
+          },
+          "knn": {
+            "mae_mm_day": 0.8026950548851682,
+            "rmse_mm_day": 1.00999849531234,
+            "r2": 0.583977638442005,
+            "bias_mm_day": 0.7371379481371657,
+            "weekly_mae_mm": 4.5702552784504284
+          },
+          "svr": {
+            "mae_mm_day": 0.8638599055060755,
+            "rmse_mm_day": 1.1432628135724046,
+            "r2": 0.4669507009212086,
+            "bias_mm_day": 0.10084373410122846,
+            "weekly_mae_mm": 4.564852590667664
+          },
+          "xgboost": {
+            "mae_mm_day": 0.9557441776029525,
+            "rmse_mm_day": 1.4067180429894681,
+            "r2": 0.1929706355623908,
+            "bias_mm_day": 0.839443503656695,
+            "weekly_mae_mm": 5.5108159961700425
           }
         }
       }
@@ -215,23 +410,47 @@
     "persistence": {
       "mae_mm_day": 0.11956521739130432,
       "rmse_mm_day": 0.15607968979088016,
+      "r2": -0.5611780098369386,
       "bias_mm_day": -0.00043478260869565257,
       "weekly_mae_mm": 0.1724999999999997
     },
     "ridge": {
       "mae_mm_day": 0.3135084638630511,
       "rmse_mm_day": 0.3524672458105386,
+      "r2": -6.961541601814994,
       "bias_mm_day": -0.3102629871363346,
       "weekly_mae_mm": 1.7840121760339243
     },
     "random_forest": {
       "mae_mm_day": 0.5620453098210163,
       "rmse_mm_day": 0.5829772329512651,
+      "r2": -20.78024837542737,
       "bias_mm_day": 0.5620453098210163,
       "weekly_mae_mm": 3.231760531470843
+    },
+    "knn": {
+      "mae_mm_day": 0.5440083061487259,
+      "rmse_mm_day": 0.5615898723081473,
+      "r2": -19.21148265151963,
+      "bias_mm_day": 0.5440083061487259,
+      "weekly_mae_mm": 3.128047760355173
+    },
+    "svr": {
+      "mae_mm_day": 1.485686846497399,
+      "rmse_mm_day": 1.5027732424569422,
+      "r2": -143.725995717705,
+      "bias_mm_day": 1.485686846497399,
+      "weekly_mae_mm": 8.542699367360045
+    },
+    "xgboost": {
+      "mae_mm_day": 0.7655953850953475,
+      "rmse_mm_day": 0.7815517843249131,
+      "r2": -38.144897190244215,
+      "bias_mm_day": 0.7655953850953475,
+      "weekly_mae_mm": 4.402173464298248
     }
   },
-  "decision": "Mantener la persistencia como referencia técnica y no desplegar por ahora Ridge ni Random Forest: ninguno mejora de forma estable el baseline temporal.",
+  "decision": "Mantener la persistencia como referencia predictiva del piloto: ninguno de los cinco algoritmos de aprendizaje mejora su MAE medio de validación. Ridge queda como mejor candidato de machine learning.",
   "limitations": [
     "Un solo ciclo, cultivo y estación no permiten demostrar generalización.",
     "La etiqueta es una referencia calculada por SiAR, no riego real observado.",

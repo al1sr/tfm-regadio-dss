@@ -31,11 +31,14 @@ import pandas as pd
 from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.impute import SimpleImputer
+from sklearn.neighbors import KNeighborsRegressor
 from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVR
+from xgboost import XGBRegressor
 
 
 DEFAULT_INPUT = Path("data/processed/modeling_dataset_daily.csv")
@@ -70,7 +73,12 @@ MODEL_LABELS = {
     "persistence": "Persistencia",
     "ridge": "Ridge",
     "random_forest": "Random Forest",
+    "knn": "KNN",
+    "svr": "SVR",
+    "xgboost": "XGBoost",
 }
+MODEL_ORDER = tuple(MODEL_LABELS)
+ML_MODEL_NAMES = tuple(name for name in MODEL_ORDER if name != "persistence")
 
 
 @dataclass(frozen=True)
@@ -221,10 +229,48 @@ def _models() -> dict[str, RegressorMixin]:
             ),
         ]
     )
+    knn = Pipeline(
+        [
+            ("imputer", SimpleImputer(strategy="median")),
+            ("scaler", StandardScaler()),
+            ("model", KNeighborsRegressor(n_neighbors=7, weights="distance")),
+        ]
+    )
+    svr = Pipeline(
+        [
+            ("imputer", SimpleImputer(strategy="median")),
+            ("scaler", StandardScaler()),
+            ("model", SVR(kernel="rbf", C=10.0, epsilon=0.1, gamma="scale")),
+        ]
+    )
+    xgboost = Pipeline(
+        [
+            ("imputer", SimpleImputer(strategy="median")),
+            (
+                "model",
+                XGBRegressor(
+                    objective="reg:squarederror",
+                    n_estimators=250,
+                    learning_rate=0.03,
+                    max_depth=2,
+                    min_child_weight=3,
+                    subsample=0.8,
+                    colsample_bytree=0.8,
+                    reg_alpha=0.05,
+                    reg_lambda=1.5,
+                    random_state=42,
+                    n_jobs=1,
+                ),
+            ),
+        ]
+    )
     return {
         "persistence": PersistenceRegressor(),
         "ridge": ridge,
         "random_forest": forest,
+        "knn": knn,
+        "svr": svr,
+        "xgboost": xgboost,
     }
 
 
@@ -251,6 +297,7 @@ def regression_metrics(
     return {
         "mae_mm_day": float(mean_absolute_error(actual_values, predicted_values)),
         "rmse_mm_day": float(mean_squared_error(actual_values, predicted_values) ** 0.5),
+        "r2": float(r2_score(actual_values, predicted_values)),
         "bias_mm_day": float(residual.mean()),
         "weekly_mae_mm": float(mean_absolute_error(actual_weekly, predicted_weekly)),
     }
@@ -316,7 +363,7 @@ def train_and_evaluate(data: pd.DataFrame) -> tuple[dict[str, Any], pd.DataFrame
         key=lambda name: cv_summary[name]["mae_mm_day"]["mean"],
     )
     selected_ml_name = min(
-        ("ridge", "random_forest"),
+        ML_MODEL_NAMES,
         key=lambda name: cv_summary[name]["mae_mm_day"]["mean"],
     )
 
@@ -361,6 +408,18 @@ def train_and_evaluate(data: pd.DataFrame) -> tuple[dict[str, Any], pd.DataFrame
         "features": FEATURE_COLUMNS,
         "excluded_same_day_features": EXCLUDED_SAME_DAY_FEATURES,
         "prediction_constraint": "Predicciones recortadas a un mínimo de 0 mm/día",
+        "model_definitions": {
+            "persistence": (
+                "Baseline de un día: la estimación de t es la necesidad observada "
+                "en t-1; si falta, utiliza la mediana aprendida en entrenamiento."
+            ),
+            "ridge": "Regresión lineal regularizada con imputación y escalado.",
+            "random_forest": "Conjunto conservador de 300 árboles de regresión.",
+            "knn": "Regresión por siete vecinos próximos, distancia y variables escaladas.",
+            "svr": "Support Vector Regression con kernel RBF, imputación y escalado.",
+            "xgboost": "Gradient boosting de árboles con regularización y semilla fija.",
+        },
+        "persistence_horizon": "one_step_ahead",
         "split": {
             "development_rows": int(len(holdout.development)),
             "test_rows": int(len(holdout.test)),
@@ -375,8 +434,11 @@ def train_and_evaluate(data: pd.DataFrame) -> tuple[dict[str, Any], pd.DataFrame
         },
         "test": test_metrics,
         "decision": (
-            "Mantener la persistencia como referencia técnica y no desplegar por ahora "
-            "Ridge ni Random Forest: ninguno mejora de forma estable el baseline temporal."
+            "Mantener la persistencia como referencia predictiva del piloto: ninguno "
+            "de los cinco algoritmos de aprendizaje mejora su MAE medio de validación. "
+            f"{MODEL_LABELS[selected_ml_name]} queda como mejor candidato de machine learning."
+            if selected_name == "persistence"
+            else f"Seleccionar {MODEL_LABELS[selected_name]} por su menor MAE medio de validación."
         ),
         "limitations": [
             "Un solo ciclo, cultivo y estación no permiten demostrar generalización.",
@@ -409,12 +471,19 @@ def plot_predictions(predictions: pd.DataFrame, output: Path) -> None:
     dates = pd.to_datetime(predictions["observed_date"])
     fig, axes = plt.subplots(2, 1, figsize=(10, 6.3), sharex=True, constrained_layout=True)
     axes[0].plot(dates, predictions[TARGET], color="#111827", lw=2.2, marker="o", ms=3.5, label="Referencia SiAR")
-    palette = {"persistence": "#2563EB", "ridge": "#D97706", "random_forest": "#0F766E"}
+    palette = {
+        "persistence": "#2563EB",
+        "ridge": "#D97706",
+        "random_forest": "#0F766E",
+        "knn": "#7C3AED",
+        "svr": "#DC2626",
+        "xgboost": "#0891B2",
+    }
     for name, color in palette.items():
         axes[0].plot(dates, predictions[f"prediction_{name}_mm"], color=color, lw=1.5, label=MODEL_LABELS[name])
     axes[0].set_ylabel("Necesidad neta (mm/día)")
     axes[0].set_title("Predicciones en el tramo de prueba")
-    axes[0].legend(ncol=4, frameon=False, loc="upper center")
+    axes[0].legend(ncol=4, frameon=False, loc="upper center", fontsize=8)
     axes[0].grid(axis="y")
     for name, color in palette.items():
         residual = predictions[f"prediction_{name}_mm"] - predictions[TARGET]
@@ -431,10 +500,17 @@ def plot_predictions(predictions: pd.DataFrame, output: Path) -> None:
 
 
 def plot_validation(report: dict[str, Any], output: Path) -> None:
-    model_names = ["persistence", "ridge", "random_forest"]
+    model_names = list(MODEL_ORDER)
     folds = report["cross_validation"]["folds"]
     fig, axes = plt.subplots(1, 2, figsize=(10, 4.8), constrained_layout=True)
-    palette = {"persistence": "#2563EB", "ridge": "#D97706", "random_forest": "#0F766E"}
+    palette = {
+        "persistence": "#2563EB",
+        "ridge": "#D97706",
+        "random_forest": "#0F766E",
+        "knn": "#7C3AED",
+        "svr": "#DC2626",
+        "xgboost": "#0891B2",
+    }
     for name in model_names:
         values = [fold["metrics"][name]["mae_mm_day"] for fold in folds]
         axes[0].plot(range(1, len(values) + 1), values, marker="o", lw=1.8, color=palette[name], label=MODEL_LABELS[name])
@@ -443,7 +519,7 @@ def plot_validation(report: dict[str, Any], output: Path) -> None:
     axes[0].set_ylabel("MAE (mm/día)")
     axes[0].set_title("Validación con ventana expansiva")
     axes[0].grid(axis="y")
-    axes[0].legend(frameon=False)
+    axes[0].legend(frameon=False, fontsize=8, ncol=2)
     positions = np.arange(len(model_names))
     width = 0.36
     cv_means = [report["cross_validation"]["summary"][name]["mae_mm_day"]["mean"] for name in model_names]
@@ -451,7 +527,7 @@ def plot_validation(report: dict[str, Any], output: Path) -> None:
     test_mae = [report["test"][name]["mae_mm_day"] for name in model_names]
     axes[1].bar(positions - width / 2, cv_means, width, yerr=cv_std, capsize=4, color="#64748B", label="Validación: media ± desviación")
     axes[1].bar(positions + width / 2, test_mae, width, color="#2563EB", label="Prueba final")
-    axes[1].set_xticks(positions, [MODEL_LABELS[name] for name in model_names], rotation=18, ha="right")
+    axes[1].set_xticks(positions, [MODEL_LABELS[name] for name in model_names], rotation=28, ha="right")
     axes[1].set_ylabel("MAE (mm/día)")
     axes[1].set_title("Error medio de validación y prueba")
     axes[1].grid(axis="y")

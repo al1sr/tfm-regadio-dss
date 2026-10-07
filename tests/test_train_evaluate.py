@@ -80,9 +80,17 @@ class TrainEvaluateTests(unittest.TestCase):
         report_a, predictions_a, _ = train_and_evaluate(sample_data())
         report_b, predictions_b, _ = train_and_evaluate(sample_data())
 
-        self.assertIn(
-            report_a["selected_model"], {"persistence", "ridge", "random_forest"}
-        )
+        expected_models = {
+            "persistence",
+            "ridge",
+            "random_forest",
+            "knn",
+            "svr",
+            "xgboost",
+        }
+        self.assertIn(report_a["selected_model"], expected_models)
+        self.assertEqual(set(report_a["test"]), expected_models)
+        self.assertIn(report_a["selected_ml_candidate"], expected_models - {"persistence"})
         self.assertEqual(report_a["input_stage"], "processed_4_2")
         self.assertEqual(len(report_a["cross_validation"]["folds"]), 3)
         for model_name in report_a["test"]:
@@ -99,7 +107,10 @@ class TrainEvaluateTests(unittest.TestCase):
             for column in predictions_a
             if column.startswith("prediction_")
         ]
+        self.assertEqual(len(prediction_columns), len(expected_models))
         self.assertTrue((predictions_a[prediction_columns] >= 0).all().all())
+        self.assertEqual(report_a["persistence_horizon"], "one_step_ahead")
+        self.assertIn("r2", report_a["test"]["persistence"])
 
     def test_rejects_small_datasets(self):
         with self.assertRaisesRegex(ValueError, "30 observaciones"):

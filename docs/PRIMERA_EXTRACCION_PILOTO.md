@@ -10,7 +10,7 @@ Configuración del piloto:
 
 | Parámetro | Valor |
 |---|---|
-| Cultivo de referencia | Pimiento bajo invernadero |
+| Cultivo de referencia | Pimiento al aire libre |
 | Estación SiAR | `AL01` - La Mojonera |
 | Periodo observado SiAR | 17/09/2026 a 23/09/2026 |
 | Municipio AEMET | `04013` - Almería |
