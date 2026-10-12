@@ -23,7 +23,7 @@ estructura inicial.
 | 2. Marco teórico y estado del arte | Desarrollado | Revisión de citas, formato bibliográfico y correspondencia entre citas y referencias. |
 | 3. Metodología y arquitectura | Desarrollado | Mantener alineado con las decisiones que se adopten para el DSS, la base de datos y la visualización. |
 | 4. Procesamiento y Machine Learning | Desarrollado para el piloto | Ampliar datos si el calendario lo permite y evitar presentar el modelo como validado agronómicamente. |
-| 5. Sistema de optimización y resultados | Sin desarrollar | Diseñar, implementar, demostrar y validar el sistema de recomendación. |
+| 5. Sistema de optimización y resultados | Desarrollado para el piloto (12/10/2026) | Revisión por el equipo; incorporar ET0 prevista si se obtiene histórico de predicciones; validación con usuarios. |
 | 6. Conclusiones | Sin desarrollar | Redactar aportaciones, cumplimiento de objetivos, limitaciones e investigación futura. |
 | Elementos preliminares y anexos | Incompletos | Portada definitiva, resumen, abstract, palabras clave, índice, listas y anexos técnicos. |
 

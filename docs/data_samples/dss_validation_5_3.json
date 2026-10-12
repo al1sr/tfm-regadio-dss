@@ -1,0 +1,284 @@
+{
+  "objective": "Validación técnica del motor de recomendación del DSS",
+  "case": {
+    "crop": "Pimiento",
+    "station": "AL01",
+    "source": "SiAR - Cálculo de necesidades netas"
+  },
+  "test_start": "2025-09-08",
+  "formula_check": {
+    "days_compared": 148,
+    "max_abs_difference_mm": 0.008,
+    "note": "Diferencias atribuibles al redondeo a dos decimales de SiAR."
+  },
+  "window_selection": {
+    "candidates": [
+      1,
+      3,
+      5,
+      7,
+      14
+    ],
+    "mae_by_window": [
+      {
+        "window_days": 1,
+        "desarrollo": 0.517,
+        "prueba": 0.127
+      },
+      {
+        "window_days": 3,
+        "desarrollo": 0.494,
+        "prueba": 0.11
+      },
+      {
+        "window_days": 5,
+        "desarrollo": 0.484,
+        "prueba": 0.101
+      },
+      {
+        "window_days": 7,
+        "desarrollo": 0.471,
+        "prueba": 0.101
+      },
+      {
+        "window_days": 14,
+        "desarrollo": 0.469,
+        "prueba": 0.124
+      }
+    ],
+    "selected_window_days": 7,
+    "configured_window_days": 7,
+    "criterion": "Ventana más corta con MAE de desarrollo (horizontes 1 a 7) a menos de un 1 % del mínimo"
+  },
+  "horizon_validation": {
+    "table": [
+      {
+        "period": "desarrollo",
+        "horizon_day": 1,
+        "n": 110,
+        "mae_persistence": 0.467,
+        "mae_et0_kc": 0.435,
+        "bias_persistence": 0.009,
+        "bias_et0_kc": 0.03,
+        "improvement_pct": 6.9
+      },
+      {
+        "period": "desarrollo",
+        "horizon_day": 2,
+        "n": 110,
+        "mae_persistence": 0.613,
+        "mae_et0_kc": 0.469,
+        "bias_persistence": 0.025,
+        "bias_et0_kc": 0.042,
+        "improvement_pct": 23.5
+      },
+      {
+        "period": "desarrollo",
+        "horizon_day": 3,
+        "n": 110,
+        "mae_persistence": 0.652,
+        "mae_et0_kc": 0.476,
+        "bias_persistence": 0.05,
+        "bias_et0_kc": 0.063,
+        "improvement_pct": 27.0
+      },
+      {
+        "period": "desarrollo",
+        "horizon_day": 4,
+        "n": 110,
+        "mae_persistence": 0.702,
+        "mae_et0_kc": 0.477,
+        "bias_persistence": 0.071,
+        "bias_et0_kc": 0.075,
+        "improvement_pct": 32.1
+      },
+      {
+        "period": "desarrollo",
+        "horizon_day": 5,
+        "n": 110,
+        "mae_persistence": 0.754,
+        "mae_et0_kc": 0.481,
+        "bias_persistence": 0.087,
+        "bias_et0_kc": 0.084,
+        "improvement_pct": 36.2
+      },
+      {
+        "period": "desarrollo",
+        "horizon_day": 6,
+        "n": 110,
+        "mae_persistence": 0.813,
+        "mae_et0_kc": 0.482,
+        "bias_persistence": 0.101,
+        "bias_et0_kc": 0.095,
+        "improvement_pct": 40.7
+      },
+      {
+        "period": "desarrollo",
+        "horizon_day": 7,
+        "n": 110,
+        "mae_persistence": 0.871,
+        "mae_et0_kc": 0.477,
+        "bias_persistence": 0.111,
+        "bias_et0_kc": 0.102,
+        "improvement_pct": 45.2
+      },
+      {
+        "period": "prueba",
+        "horizon_day": 1,
+        "n": 23,
+        "mae_persistence": 0.12,
+        "mae_et0_kc": 0.09,
+        "bias_persistence": -0.0,
+        "bias_et0_kc": 0.047,
+        "improvement_pct": 25.0
+      },
+      {
+        "period": "prueba",
+        "horizon_day": 2,
+        "n": 22,
+        "mae_persistence": 0.115,
+        "mae_et0_kc": 0.092,
+        "bias_persistence": 0.017,
+        "bias_et0_kc": 0.06,
+        "improvement_pct": 20.0
+      },
+      {
+        "period": "prueba",
+        "horizon_day": 3,
+        "n": 21,
+        "mae_persistence": 0.13,
+        "mae_et0_kc": 0.084,
+        "bias_persistence": 0.011,
+        "bias_et0_kc": 0.06,
+        "improvement_pct": 35.4
+      },
+      {
+        "period": "prueba",
+        "horizon_day": 4,
+        "n": 20,
+        "mae_persistence": 0.122,
+        "mae_et0_kc": 0.092,
+        "bias_persistence": 0.025,
+        "bias_et0_kc": 0.074,
+        "improvement_pct": 24.6
+      },
+      {
+        "period": "prueba",
+        "horizon_day": 5,
+        "n": 19,
+        "mae_persistence": 0.132,
+        "mae_et0_kc": 0.101,
+        "bias_persistence": 0.042,
+        "bias_et0_kc": 0.088,
+        "improvement_pct": 23.5
+      },
+      {
+        "period": "prueba",
+        "horizon_day": 6,
+        "n": 18,
+        "mae_persistence": 0.141,
+        "mae_et0_kc": 0.122,
+        "bias_persistence": 0.061,
+        "bias_et0_kc": 0.101,
+        "improvement_pct": 13.5
+      },
+      {
+        "period": "prueba",
+        "horizon_day": 7,
+        "n": 17,
+        "mae_persistence": 0.126,
+        "mae_et0_kc": 0.134,
+        "bias_persistence": 0.075,
+        "bias_et0_kc": 0.119,
+        "improvement_pct": -6.3
+      }
+    ],
+    "selected_method_test_mae": {
+      "1": 0.09,
+      "2": 0.092,
+      "3": 0.084,
+      "4": 0.092,
+      "5": 0.101,
+      "6": 0.122,
+      "7": 0.134
+    }
+  },
+  "campaign_one_day": {
+    "issues": 152,
+    "days_with_recommendation": 152,
+    "days_without_reference": 5,
+    "metrics": {
+      "desarrollo": {
+        "dss": {
+          "n": 124,
+          "mae": 0.417,
+          "rmse": 0.583,
+          "bias": 0.044
+        },
+        "persistencia": {
+          "n": 124,
+          "mae": 0.449,
+          "rmse": 0.71,
+          "bias": 0.012
+        }
+      },
+      "prueba": {
+        "dss": {
+          "n": 23,
+          "mae": 0.09,
+          "rmse": 0.113,
+          "bias": 0.047
+        },
+        "persistencia": {
+          "n": 23,
+          "mae": 0.12,
+          "rmse": 0.156,
+          "bias": -0.0
+        }
+      }
+    },
+    "negative_doses": 0
+  },
+  "weekly": {
+    "complete_weeks": 19,
+    "mae_mm": 1.207,
+    "max_abs_error_mm": 4.103,
+    "relative_error_pct": 4.8
+  },
+  "season_totals": {
+    "net_reference_mm": 531.05,
+    "net_dss_one_day_mm": 535.2,
+    "net_reference_same_days_mm": 528.69,
+    "efficiency_sensitivity": {
+      "goteo": {
+        "efficiency": 0.9,
+        "gross_mm": 590.1,
+        "m3_per_ha": 5901.0
+      },
+      "aspersion": {
+        "efficiency": 0.75,
+        "gross_mm": 708.1,
+        "m3_per_ha": 7081.0
+      },
+      "superficie": {
+        "efficiency": 0.6,
+        "gross_mm": 885.1,
+        "m3_per_ha": 8851.0
+      }
+    }
+  },
+  "scenarios": {
+    "total": 13,
+    "passed": 13
+  },
+  "runtime": {
+    "seven_day_recommendation_ms_mean": 11.6,
+    "seven_day_recommendation_ms_max": 14.7,
+    "campaign_simulation_s": 1.01
+  },
+  "limitations": [
+    "La referencia es la necesidad calculada por SiAR, no el riego aplicado.",
+    "No se dispone de predicciones meteorológicas históricas alineadas con la campaña.",
+    "Un único cultivo, estación y campaña; la validación es técnica y no agronómica."
+  ]
+}
