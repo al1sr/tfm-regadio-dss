@@ -62,7 +62,7 @@ Luis Moreno Díaz, Adrián Pérez Lombal, Manuel Ramos Alascio y Alicia Santamar
 
 El proyecto distingue entre tecnologías ya utilizadas en el prototipo y componentes previstos en la arquitectura final:
 
-- Implementado: Python, pandas y NumPy para extracción, normalización, calidad y preparación; scikit-learn y XGBoost para modelado; Matplotlib para evidencias; Jupyter y Visual Studio Code para desarrollo; Git y GitHub para versionado.
+- Implementado: Python, pandas y NumPy para extracción, normalización, calidad y preparación; scikit-learn y XGBoost para modelado; Matplotlib para evidencias; Streamlit para la aplicación de demostración del DSS; Jupyter y Visual Studio Code para desarrollo; Git y GitHub para versionado.
 - Diseñado o previsto: MySQL para persistencia relacional, Apache Hop para orquestación visual, Power BI o Tableau para presentación y Docker para despliegue reproducible.
 - Condicional: PySpark solo si una futura ampliación nacional y multianual justifica procesamiento distribuido; no es necesario para el piloto actual.
 
@@ -82,6 +82,9 @@ Para reproducir el entorno de Python se puede usar indistintamente `environment.
 10. Regenerar el ejemplo visual con `python -m src.visualization.build_etl_visual`.
 11. Auditar los volúmenes de las capas con `python -m src.analysis.build_etl_audit_4_1`. El resultado muestra cuántas filas entran en raw, cuántas se conservan tras la normalización y cuántas son válidas para modelar.
 12. Entrenar y comparar Persistencia, Ridge, Random Forest, KNN, SVR y XGBoost con `python -m src.models.train_evaluate`.
+13. Obtener una recomendación de riego con `python -m src.dss.recommend --fecha 2025-06-28 --horizonte 7 --superficie 1.5`. La salida diaria y el resumen se guardan en CSV y JSON en `results/reports`.
+14. Abrir la aplicación de demostración con `streamlit run src/dss/app_streamlit.py`.
+15. Regenerar la validación del sistema, sus tablas y figuras con `python -m src.analysis.build_validation_5_3` y el esquema del motor con `python -m src.visualization.build_dss_visual`.
 
 Las fuentes, variables y controles de calidad del apartado 3.1 se sintetizan en [`docs/memoria/03_01_fuentes_variables_calidad_datos.md`](docs/memoria/03_01_fuentes_variables_calidad_datos.md). Los inventarios técnicos completos se mantienen en [`docs/FUENTE_DATOS_SIAR.md`](docs/FUENTE_DATOS_SIAR.md), [`docs/FUENTE_DATOS_AEMET.md`](docs/FUENTE_DATOS_AEMET.md) y en el [catálogo de variables](docs/data_samples/feature_catalog_4_2.csv), evitando duplicar diccionarios.
 La arquitectura, las tecnologías y el flujo de información del apartado 3.2 están en [`docs/memoria/03_02_arquitectura_tecnologias_flujo.md`](docs/memoria/03_02_arquitectura_tecnologias_flujo.md), con su [figura reproducible](docs/images/arquitectura_sistema_3_2.png) y el código que la genera en `src/visualization/build_architecture_visual.py`.
@@ -93,6 +96,7 @@ El texto desarrollado del apartado 4.2 y el código de preparación de variables
 El resumen de la sesión del apartado 4.2 está en [`docs/RESUMEN_SESION_2026-09-28_LUISM.md`](docs/RESUMEN_SESION_2026-09-28_LUISM.md).
 El desarrollo, los resultados y el resumen del apartado 4.3 están en [`docs/memoria/04_03_desarrollo_evaluacion_modelo_predictivo.md`](docs/memoria/04_03_desarrollo_evaluacion_modelo_predictivo.md), [`docs/data_samples/model_evaluation_4_3.json`](docs/data_samples/model_evaluation_4_3.json) y [`docs/RESUMEN_SESION_2026-09-28_LUISM_4_3.md`](docs/RESUMEN_SESION_2026-09-28_LUISM_4_3.md).
 El cierre conjunto de los capítulos 3 y 4 tras la revisión del tutor se recoge en [`docs/RESUMEN_SESION_2026-10-07.md`](docs/RESUMEN_SESION_2026-10-07.md).
+El diseño del motor de recomendación, la aplicación y la validación del capítulo 5 están en [`docs/memoria/05_01_diseno_sistema_recomendacion.md`](docs/memoria/05_01_diseno_sistema_recomendacion.md), [`docs/memoria/05_02_aplicacion_visualizacion_resultados.md`](docs/memoria/05_02_aplicacion_visualizacion_resultados.md) y [`docs/memoria/05_03_validacion_resultados_analisis_critico.md`](docs/memoria/05_03_validacion_resultados_analisis_critico.md), con el informe reproducible en [`docs/data_samples/dss_validation_5_3.json`](docs/data_samples/dss_validation_5_3.json) y el resumen de trabajo en [`docs/RESUMEN_SESION_2026-10-12_CAPITULO_5.md`](docs/RESUMEN_SESION_2026-10-12_CAPITULO_5.md).
 El estado global del TFM y la hoja de ruta priorizada se mantienen en [`docs/ESTADO_TFM_Y_TRABAJO_PENDIENTE.md`](docs/ESTADO_TFM_Y_TRABAJO_PENDIENTE.md).
 
 La forma de trabajar con ramas, commits, push y pull requests se explica en [`CONTRIBUTING.md`](CONTRIBUTING.md). La justificación metodológica para la memoria está en [`docs/memoria/03_03_planificacion_organizacion_proyecto.md`](docs/memoria/03_03_planificacion_organizacion_proyecto.md).
