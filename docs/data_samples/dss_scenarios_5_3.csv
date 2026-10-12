@@ -1,0 +1,14 @@
+escenario,comportamiento_esperado,resultado,observacion
+Lluvia observada superior a la ETc,Dosis nula y nunca negativa,correcto,"Necesidad neta 0,00 mm; la lluvia efectiva supera a la ETc y la regla de no negatividad fija el valor en cero."
+Lluvia prevista relevante,Aviso de aplazamiento sin descuento automático,correcto,"Se emite aviso para aplazar el riego sin descontar automáticamente la lluvia prevista, porque su efectividad solo se conoce después."
+Fechas sin datos en la fuente,Sustitución explícita y aviso,correcto,"Las cinco fechas sin meteorología usan ['et0_reciente_kc'], llevan aviso y no se sustituyen por cero."
+Datos desactualizados,Aviso general y confianza baja,correcto,El último dato es del 17/07/2025; se avisa de la antigüedad y la confianza de los tres días baja a 'baja'.
+ET0 extrema,Aviso de extrapolación,correcto,"Con ET0 prevista de 11,5 mm la necesidad es 11,50 mm y se marca como extrapolación."
+Fecha fuera del ciclo,Sin recomendación,correcto,Los días 1 y 2 de octubre quedan fuera del calendario del cultivo y no reciben recomendación.
+Inicio sin histórico,Sin recomendación,correcto,En el primer día de campaña no existe información previa y el sistema no inventa una dosis.
+Entradas no válidas,Rechazo con mensaje,correcto,"Eficiencia 1,4, horizonte de 10 días, superficie negativa y sistema desconocido se rechazan con un mensaje explicativo."
+Dotación insuficiente,Reducción proporcional y aviso,correcto,"La dosis planificada de 47,1 mm se ajusta a 20 mm (factor 0,42) y se avisa del déficit."
+Cambio de eficiencia,Dosis bruta decreciente con la eficiencia,correcto,"Dosis brutas semanales para eficiencias 0,60, 0,75, 0,90 y 1,00: 70,7, 56,6, 47,1, 42,4 mm."
+Coherencia diaria y semanal,Sumas y volúmenes consistentes,correcto,"La suma diaria (32,12 mm) coincide con el resumen semanal y el volumen (642 m3) con 10 m3 por mm y hectárea."
+Trazabilidad,Origen y reglas en cada fila,correcto,"Cada fila conserva método, reglas, archivo de origen, último dato observado y explicación; la cabecera guarda la URL y la fecha de descarga."
+Cambio de fase del cultivo,El Kc del calendario corrige la persistencia,correcto,"En el cambio de Kc de 0,70 a 0,90 el DSS se desvía 0,35 mm y la persistencia 1,19 mm respecto a SiAR."
