@@ -134,24 +134,29 @@ def build_visual(output: Path = DEFAULT_OUTPUT) -> Path:
 
     future_y = 0.20
     future_boxes = [
-        (0.23, 0.16, "Orquestación", "Apache Hop\ncargas programadas"),
-        (0.43, 0.16, "Persistencia", "MySQL / Parquet\nmetadatos y resultados"),
-        (0.63, 0.16, "Motor DSS", "reglas · predicción\ndosis y explicación"),
-        (0.83, 0.13, "Presentación", "Power BI / Tableau\nconsulta del usuario"),
+        (0.23, 0.16, "Orquestación", "Apache Hop\ncargas programadas", False),
+        (0.43, 0.16, "Persistencia", "MySQL / Parquet\nmetadatos y resultados", False),
+        (0.63, 0.16, "Motor DSS", "reglas · ET0 × Kc\ndosis y explicación", True),
+        (0.83, 0.13, "Presentación", "Streamlit · CSV\nPower BI opcional", True),
     ]
-    for x, width, title, detail in future_boxes:
-        _box(axis, x, future_y, width, h, title, detail, implemented=False)
+    for x, width, title, detail, implemented in future_boxes:
+        _box(axis, x, future_y, width, h, title, detail, implemented=implemented)
     for index in range(len(future_boxes) - 1):
-        x, width, _, _ = future_boxes[index]
-        next_x = future_boxes[index + 1][0]
-        _arrow(axis, (x + width, future_y + h / 2), (next_x, future_y + h / 2), dashed=True)
-    _arrow(axis, (0.61, y), (0.51, future_y + h), dashed=True)
-    _arrow(axis, (0.91, y), (0.70, future_y + h), dashed=True)
+        x, width, _, _, done = future_boxes[index]
+        next_x, _, _, _, next_done = future_boxes[index + 1]
+        _arrow(
+            axis,
+            (x + width, future_y + h / 2),
+            (next_x, future_y + h / 2),
+            dashed=not (done and next_done),
+        )
+    _arrow(axis, (0.585, y), (0.51, future_y + h), dashed=True)
+    _arrow(axis, (0.635, y), (0.70, future_y + h), dashed=False)
 
     axis.text(
         0.035,
         0.445,
-        "ARQUITECTURA OBJETIVO",
+        "SISTEMA DE RECOMENDACIÓN Y ARQUITECTURA OBJETIVO",
         fontsize=10,
         fontweight="bold",
         color="#6C757D",
