@@ -1,10 +1,10 @@
 {
-  "run_date": "2026-10-30",
+  "run_date": "2026-10-31",
   "selection_policy": "todas las estaciones y h=1…9, sin apertura de la app",
   "stations": [
     {
       "station_code": "AL01",
-      "last_observation_date": "2026-10-29",
+      "last_observation_date": "2026-10-30",
       "records_received": 45,
       "new_emissions": 9,
       "methods_by_horizon": {
@@ -22,8 +22,8 @@
     },
     {
       "station_code": "Z06",
-      "last_observation_date": "2026-10-29",
-      "records_received": 14,
+      "last_observation_date": "2026-10-30",
+      "records_received": 15,
       "new_emissions": 9,
       "methods_by_horizon": {
         "1": "ridge_et0_multiyear_h1",
@@ -40,7 +40,7 @@
     },
     {
       "station_code": "BA08",
-      "last_observation_date": "2026-10-29",
+      "last_observation_date": "2026-10-30",
       "records_received": 45,
       "new_emissions": 9,
       "methods_by_horizon": {
@@ -59,10 +59,10 @@
   ],
   "validation": {
     "status": "collecting",
-    "records": 45,
-    "provisional": 2,
+    "records": 72,
+    "provisional": 7,
     "consolidated": 0,
-    "pending": 43,
+    "pending": 65,
     "revisions_detected": 0,
     "consolidation_days": 7,
     "minimum_validation_cases": 30,
@@ -70,9 +70,9 @@
     "gate_window_cases": 60,
     "minimum_relative_improvement_pct": 5.0,
     "interpretation": "Registro prospectivo; no sustituye la evaluación rolling-origin hasta alcanzar una ventana temporal suficiente.",
-    "ridge_mae_mm_day": 0.13274184383837095,
-    "mean_7d_mae_mm_day": 0.054832507142857256,
-    "persistence_mae_mm_day": 0.0793288999999997,
+    "ridge_mae_mm_day": 0.3970969449779597,
+    "mean_7d_mae_mm_day": 0.3497113714285714,
+    "persistence_mae_mm_day": 0.30094137142857136,
     "gate_evaluation_cases": 0,
     "deployment_gate": "experimental_ridge_collecting_evidence",
     "gate_reason": "faltan casos pareados: 0/30",
