@@ -1,10 +1,10 @@
 {
-  "run_date": "2026-11-04",
+  "run_date": "2026-11-05",
   "selection_policy": "todas las estaciones y h=1…9, sin apertura de la app",
   "stations": [
     {
       "station_code": "AL01",
-      "last_observation_date": "2026-11-03",
+      "last_observation_date": "2026-11-04",
       "records_received": 45,
       "new_emissions": 9,
       "methods_by_horizon": {
@@ -22,8 +22,8 @@
     },
     {
       "station_code": "Z06",
-      "last_observation_date": "2026-11-03",
-      "records_received": 19,
+      "last_observation_date": "2026-11-04",
+      "records_received": 20,
       "new_emissions": 9,
       "methods_by_horizon": {
         "1": "ridge_et0_multiyear_h1",
@@ -40,7 +40,7 @@
     },
     {
       "station_code": "BA08",
-      "last_observation_date": "2026-11-03",
+      "last_observation_date": "2026-11-04",
       "records_received": 45,
       "new_emissions": 9,
       "methods_by_horizon": {
@@ -59,10 +59,10 @@
   ],
   "validation": {
     "status": "collecting",
-    "records": 180,
-    "provisional": 57,
-    "consolidated": 0,
-    "pending": 123,
+    "records": 207,
+    "provisional": 75,
+    "consolidated": 2,
+    "pending": 130,
     "revisions_detected": 0,
     "consolidation_days": 7,
     "minimum_validation_cases": 30,
@@ -70,12 +70,15 @@
     "gate_window_cases": 60,
     "minimum_relative_improvement_pct": 5.0,
     "interpretation": "Registro prospectivo; no sustituye la evaluación rolling-origin hasta alcanzar una ventana temporal suficiente.",
-    "ridge_mae_mm_day": 0.3862981350543014,
-    "mean_7d_mae_mm_day": 0.3704362606516291,
-    "persistence_mae_mm_day": 0.42910895438596486,
-    "gate_evaluation_cases": 0,
+    "ridge_mae_mm_day": 0.13274184383837095,
+    "mean_7d_mae_mm_day": 0.054832507142857256,
+    "persistence_mae_mm_day": 0.0793288999999997,
+    "gate_evaluation_cases": 2,
+    "gate_ridge_mae_mm_day": 0.13274184383837095,
+    "gate_mean_7d_mae_mm_day": 0.054832507142857256,
+    "observed_relative_improvement_pct": -142.08603756259672,
     "deployment_gate": "experimental_ridge_collecting_evidence",
-    "gate_reason": "faltan casos pareados: 0/30",
+    "gate_reason": "faltan casos pareados: 2/30",
     "gate_rule": "Con al menos 30 casos consolidados y pareados, evaluar los 60 más recientes y usar Ridge solo si reduce al menos un 5 % el MAE de la media física de 7 días."
   }
 }
